@@ -8,6 +8,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE</DefineConstants>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>

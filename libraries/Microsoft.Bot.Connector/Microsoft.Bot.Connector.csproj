@@ -19,6 +19,9 @@
     <Summary>Client REST API library for Microsoft Bot Framework Connector</Summary>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
   <ItemGroup>
 		<Compile Remove="node_modules\**" />
 		<EmbeddedResource Remove="node_modules\**" />

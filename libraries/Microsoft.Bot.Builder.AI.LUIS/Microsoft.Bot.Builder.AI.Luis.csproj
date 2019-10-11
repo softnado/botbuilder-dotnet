@@ -19,6 +19,9 @@
     <Summary>This library implements C# classes for building bots using LUIS.</Summary>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
   <ItemGroup>
     <Content Include="**/*.dialog" />
     <Content Include="**/*.lg" />

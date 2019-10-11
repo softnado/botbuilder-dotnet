@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -147,6 +147,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.Adapters.Webex.TestBot", "tests\Adapters\Microsoft.Bot.Builder.Adapters.Webex.TestBot\Microsoft.Bot.Builder.Adapters.Webex.TestBot.csproj", "{6E39C647-902F-4CFF-A4E4-194B295E3AF4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.Dialogs.Adaptive.Templates.Tests", "tests\Microsoft.Bot.Builder.Dialogs.Adaptive.Templates.Tests\Microsoft.Bot.Builder.Dialogs.Adaptive.Templates.Tests.csproj", "{EFAA1D3D-3102-4307-A5DD-EAB4DB9B0386}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{5EA8E6A7-E5E5-458B-BCA9-1368B430DA7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBed", "samples\TestBed\TestBed.csproj", "{0148035B-9A9D-496C-86D2-9D670BC32DBF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBed-Declarative", "samples\TestBed-Declarative\TestBed-Declarative.csproj", "{C3FAB748-A2DF-49D8-87D3-7EFFBD192943}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -596,6 +602,22 @@ Global
 		{EFAA1D3D-3102-4307-A5DD-EAB4DB9B0386}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EFAA1D3D-3102-4307-A5DD-EAB4DB9B0386}.Release-Windows|Any CPU.ActiveCfg = Release|Any CPU
 		{EFAA1D3D-3102-4307-A5DD-EAB4DB9B0386}.Release-Windows|Any CPU.Build.0 = Release|Any CPU
+		{0148035B-9A9D-496C-86D2-9D670BC32DBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0148035B-9A9D-496C-86D2-9D670BC32DBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0148035B-9A9D-496C-86D2-9D670BC32DBF}.Debug-Windows|Any CPU.ActiveCfg = Debug|Any CPU
+		{0148035B-9A9D-496C-86D2-9D670BC32DBF}.Debug-Windows|Any CPU.Build.0 = Debug|Any CPU
+		{0148035B-9A9D-496C-86D2-9D670BC32DBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0148035B-9A9D-496C-86D2-9D670BC32DBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0148035B-9A9D-496C-86D2-9D670BC32DBF}.Release-Windows|Any CPU.ActiveCfg = Debug|Any CPU
+		{0148035B-9A9D-496C-86D2-9D670BC32DBF}.Release-Windows|Any CPU.Build.0 = Debug|Any CPU
+		{C3FAB748-A2DF-49D8-87D3-7EFFBD192943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3FAB748-A2DF-49D8-87D3-7EFFBD192943}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3FAB748-A2DF-49D8-87D3-7EFFBD192943}.Debug-Windows|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3FAB748-A2DF-49D8-87D3-7EFFBD192943}.Debug-Windows|Any CPU.Build.0 = Debug|Any CPU
+		{C3FAB748-A2DF-49D8-87D3-7EFFBD192943}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3FAB748-A2DF-49D8-87D3-7EFFBD192943}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3FAB748-A2DF-49D8-87D3-7EFFBD192943}.Release-Windows|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3FAB748-A2DF-49D8-87D3-7EFFBD192943}.Release-Windows|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -662,6 +684,8 @@ Global
 		{9878B523-BD1E-4285-A875-3CAB4127F7E6} = {E8CD434A-306F-41D9-B67D-BFFF3287354D}
 		{6E39C647-902F-4CFF-A4E4-194B295E3AF4} = {E8CD434A-306F-41D9-B67D-BFFF3287354D}
 		{EFAA1D3D-3102-4307-A5DD-EAB4DB9B0386} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
+		{0148035B-9A9D-496C-86D2-9D670BC32DBF} = {5EA8E6A7-E5E5-458B-BCA9-1368B430DA7E}
+		{C3FAB748-A2DF-49D8-87D3-7EFFBD192943} = {5EA8E6A7-E5E5-458B-BCA9-1368B430DA7E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7173C9F3-A7F9-496E-9078-9156E35D6E16}

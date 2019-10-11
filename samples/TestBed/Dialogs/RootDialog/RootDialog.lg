@@ -1,0 +1,23 @@
+﻿# GreetingReply
+[Activity
+    Text = Hi there! I'm a demo bot! Nice to meet you. 
+    SuggestedActions = {Suggestions(createArray('Get started', 'Cancel'))}
+]
+
+# GlobalHelp
+- Sure thing. Happy to help. This is global help and just saying - 'I'm just a demo bot'
+
+# ResetProfile
+- Sure. I've reset your profile.
+
+# Cancel
+- Sure. I've cancelled that.
+
+# Suggestions (params)
+- {join(params, ' | ')}
+
+# WelcomeUser
+[Activity
+    Text = Hello, I'm a demo bot.
+    SuggestedActions = {Suggestions(createArray('Start'))}
+]

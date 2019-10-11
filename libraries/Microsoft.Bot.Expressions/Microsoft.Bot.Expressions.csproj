@@ -22,11 +22,13 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Documentation|AnyCPU'">
     <DocumentationFile>bin\$(Configuration)\netstandard2.0\Microsoft.Bot.Expressions.xml</DocumentationFile>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>

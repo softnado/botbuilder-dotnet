@@ -26,6 +26,7 @@ bld/
 [Oo]bj/
 ecf/
 rcf/
+.vscode/
 
 # Visual Studio 2015 cache/options directory
 .vs/
