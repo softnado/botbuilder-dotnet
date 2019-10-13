@@ -13,11 +13,11 @@
 # Cancel
 - Sure. I've cancelled that.
 
-# Suggestions (params)
-- {join(params, ' | ')}
-
 # WelcomeUser
 [Activity
     Text = Hello, I'm a demo bot.
     SuggestedActions = {Suggestions(createArray('Start'))}
 ]
+
+# Suggestions (params)
+- {join(params, ' | ')}

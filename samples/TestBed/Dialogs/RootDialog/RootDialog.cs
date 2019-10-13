@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Adaptive;
 using Microsoft.Bot.Builder.LanguageGeneration;
+using Microsoft.Bot.Builder.Dialogs.Adaptive.Input;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Actions;
+using Microsoft.Bot.Builder.Dialogs.Adaptive.Templates;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Generators;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Recognizers;
@@ -19,49 +21,92 @@ namespace Microsoft.BotBuilderSamples
             var lgFile = Path.Combine(".", "Dialogs", "RootDialog", "RootDialog.lg");
             _templateEngine = new TemplateEngine().AddFile(lgFile);
             // Create instance of adaptive dialog. 
-            var rootDialog = new AdaptiveDialog(nameof(AdaptiveDialog))
+var rootDialog = new AdaptiveDialog(nameof(AdaptiveDialog))
+{
+    Generator = new TemplateEngineLanguageGenerator(_templateEngine),
+    Recognizer = new RegexRecognizer()
+    {
+        Intents = new List<IntentPattern>()
+        {
+            new IntentPattern()
             {
-                Generator = new TemplateEngineLanguageGenerator(_templateEngine),
-                Recognizer = new RegexRecognizer()
-                {
-                    Intents = new List<IntentPattern>()
-                    {
-                        new IntentPattern()
-                        {
-                            Intent = "start",
-                            Pattern = "start"
-                        },
-                        new IntentPattern()
-                        {
-                            Intent = "cancel",
-                            Pattern = "cancel"
-                        }
-                    }
+                Intent = "start",
+                Pattern = "start"
+            },
+            new IntentPattern()
+            {
+                Intent = "cancel",
+                Pattern = "cancel"
+            },
+            new IntentPattern() {
+                Intent = "set_name",
+                Pattern = "set name"
+            }
+        }
+    },
+    Triggers = new List<OnCondition>()
+    {
+        new OnConversationUpdateActivity()
+        {
+            Actions = WelcomeUserAction()
+        },
+        new OnIntent() {
+            Intent = "set_name",
+            Actions = new List<Dialog>() {
+                new TextInput() {
+                    Prompt = new ActivityTemplate("\\[set name]::What is your name?"),
+                    Property = "$userName",
+                    AlwaysPrompt = true
                 },
-                Triggers = new List<OnCondition>()
-                {
-                    new OnConversationUpdateActivity()
-                    {
-                        Actions = WelcomeUserAction()
-                    },
-                    new OnIntent()
-                    {
-                        Intent = "start",
-                        Actions = new List<Dialog>()
-                        {
-                            new SendActivity("{GreetingReply()}")
-                        }
-                    },
-                    new OnIntent()
-                    {
-                        Intent = "cancel",
-                        Actions = new List<Dialog>()
-                        {
-                            new SendActivity("{GreetingReply()}")
-                        }
-                    }
+                new SendActivity() {
+                    Activity = new ActivityTemplate("\\[set name]I have {$userName} as your name")
                 }
-            };
+            }
+        },
+        new OnIntent()
+        {
+            Intent = "start",
+            Actions = new List<Dialog>()
+            {
+                new TextInput() {
+                    Prompt = new ActivityTemplate("\\[start]::What is your name?"),
+                    Property = "$userName",
+                    AllowInterruptions = "false"
+                },
+                new SendActivity() {
+                    Activity = new ActivityTemplate("\\[start]::I have {$userName} as your name")
+                },
+                new DateTimeInput() {
+                    Prompt = new ActivityTemplate("Give me date 1"),
+                    Property = "$fromDate",
+                    AllowInterruptions = "true"
+                },
+                new SendActivity() {
+                    Activity = new ActivityTemplate("\\[start]:: I have {$fromDate} as date 1")
+                },
+                new DateTimeInput() {
+                    Prompt = new ActivityTemplate("Give me date 2"),
+                    Property = "$toDate",
+                    AllowInterruptions = "true"
+                },
+                new SendActivity() {
+                    Activity = new ActivityTemplate("\\[start]:: I have {$toDate} as date 2")
+                },
+                new SendActivity() {
+                    Activity = new ActivityTemplate("\\[start]:: I have {$userName}, {$fromDate} and {$toDate}")
+                }
+            }
+        },
+        new OnIntent()
+        {
+            Intent = "cancel",
+            Actions = new List<Dialog>()
+            {
+                new SendActivity("{WelcomeUser()}")
+            }
+        }
+    }
+};
 
             // Add named dialogs to the DialogSet. These names are saved in the dialog state.
             AddDialog(rootDialog);
