@@ -80,12 +80,13 @@ namespace Microsoft.Bot.Connector.Tests
 
         public HttpRecorderMode GetRecorderMode()
         {
-            if (Environment.GetEnvironmentVariable("HttpRecorderMode") == HttpRecorderMode.None.ToString())
-            {
-                return HttpRecorderMode.None;
-            }
+            //if (Environment.GetEnvironmentVariable("HttpRecorderMode") == HttpRecorderMode.None.ToString())
+            //{
+            //    return HttpRecorderMode.None;
+            //}
 
-            return HttpRecorderMode.Playback;
+            //return HttpRecorderMode.Playback;
+            return HttpRecorderMode.None;
         }
 #pragma warning disable 162
 
