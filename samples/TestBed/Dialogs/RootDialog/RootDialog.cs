@@ -9,6 +9,7 @@ using Microsoft.Bot.Builder.Dialogs.Adaptive.Templates;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Generators;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Recognizers;
+using Microsoft.Bot.Builder.AI.Luis;
 
 namespace Microsoft.BotBuilderSamples
 {
@@ -20,30 +21,24 @@ namespace Microsoft.BotBuilderSamples
         {
             var lgFile = Path.Combine(".", "Dialogs", "RootDialog", "RootDialog.lg");
             _templateEngine = new TemplateEngine().AddFile(lgFile);
-            // Create instance of adaptive dialog. 
+
+// ## 1.  Basic multi-turn conversation
+
+// Basic scenario of multi-input form flow. Here the user answers the questions directly in all cases.
+
+// | Who?  | Message                                                   |
+// |------:|:----------------------------------------------------------|
+// |User:  | Hi                                                        |
+// |Bot:   | Hello, I'm the demo bot. What is your name?               |
+// |User:  | vishwac                                                   |
+// |Bot:   | Hello, I have your name as 'vishwac'                      |
+// |Bot:   | What is your age?                                         |
+// |User:  | I'm 36                                                    |
+// |Bot:   | Thank you. I have your age as 36                          |    
 var rootDialog = new AdaptiveDialog(nameof(AdaptiveDialog))
 {
-    Generator = new TemplateEngineLanguageGenerator(_templateEngine),
-    Recognizer = new RegexRecognizer()
-    {
-        Intents = new List<IntentPattern>()
-        {
-            new IntentPattern()
-            {
-                Intent = "start",
-                Pattern = "start"
-            },
-            new IntentPattern()
-            {
-                Intent = "cancel",
-                Pattern = "cancel"
-            },
-            new IntentPattern() {
-                Intent = "set_name",
-                Pattern = "set name"
-            }
-        }
-    },
+    Generator = new TemplateEngineLanguageGenerator(),
+    Recognizer = new LuisRecognizer(GetLUISApp()),
     Triggers = new List<OnCondition>()
     {
         new OnConversationUpdateActivity()
@@ -51,58 +46,41 @@ var rootDialog = new AdaptiveDialog(nameof(AdaptiveDialog))
             Actions = WelcomeUserAction()
         },
         new OnIntent() {
-            Intent = "set_name",
+            Intent = "GetUserProfile",
             Actions = new List<Dialog>() {
                 new TextInput() {
-                    Prompt = new ActivityTemplate("\\[set name]::What is your name?"),
+                    Prompt = new ActivityTemplate("Hello, I'm the demo bot. What is your name?"),
+                    Validations = new List<string>() {
+                        "count(this.value) >= 2",
+                        "count(this.value) <= 150"
+                    },
+                    InvalidPrompt = new ActivityTemplate("Sorry, '{this.value}' does not work. I'm looking for 2-150 characters. What is your name?"),
                     Property = "$userName",
-                    AlwaysPrompt = true
+                    MaxTurnCount = 3,
+                    DefaultValue = "'Human'",
+                    DefaultValueResponse = new ActivityTemplate("Sorry, I'm not getting it. For now, I'll set your name to '{%DefaultValue}'."),
+                    Value = "@personName"
                 },
                 new SendActivity() {
-                    Activity = new ActivityTemplate("\\[set name]I have {$userName} as your name")
+                    Activity = new ActivityTemplate("Hello, I have your name as '{$userName}'")
+                },
+                new NumberInput() {
+                    Prompt = new ActivityTemplate("What is your age?"),
+                    Validations = new List<string>() {
+                        "int(this.value) >= 1",
+                        "int(this.value) <= 100"
+                    },
+                    InvalidPrompt = new ActivityTemplate("Sorry, '{this.value}' does not work. I'm looking for 1-150. What is your age?"),
+                    Property = "$userAge",
+                    UnrecognizedPrompt = new ActivityTemplate("Sorry, I do not recognize '{this.value}'. What is your age?"),
+                    MaxTurnCount = 3,
+                    DefaultValue = "30",
+                    DefaultValueResponse = new ActivityTemplate("Sorry, I'm not getting it. For now, I'll set your age to '{%DefaultValue}'."),
+                    Value = "@age"
+                },
+                new SendActivity() {
+                    Activity = new ActivityTemplate("Thank you. I have your age as '{$userAge}'")
                 }
-            }
-        },
-        new OnIntent()
-        {
-            Intent = "start",
-            Actions = new List<Dialog>()
-            {
-                new TextInput() {
-                    Prompt = new ActivityTemplate("\\[start]::What is your name?"),
-                    Property = "$userName",
-                    AllowInterruptions = "false"
-                },
-                new SendActivity() {
-                    Activity = new ActivityTemplate("\\[start]::I have {$userName} as your name")
-                },
-                new DateTimeInput() {
-                    Prompt = new ActivityTemplate("Give me date 1"),
-                    Property = "$fromDate",
-                    AllowInterruptions = "true"
-                },
-                new SendActivity() {
-                    Activity = new ActivityTemplate("\\[start]:: I have {$fromDate} as date 1")
-                },
-                new DateTimeInput() {
-                    Prompt = new ActivityTemplate("Give me date 2"),
-                    Property = "$toDate",
-                    AllowInterruptions = "true"
-                },
-                new SendActivity() {
-                    Activity = new ActivityTemplate("\\[start]:: I have {$toDate} as date 2")
-                },
-                new SendActivity() {
-                    Activity = new ActivityTemplate("\\[start]:: I have {$userName}, {$fromDate} and {$toDate}")
-                }
-            }
-        },
-        new OnIntent()
-        {
-            Intent = "cancel",
-            Actions = new List<Dialog>()
-            {
-                new SendActivity("{WelcomeUser()}")
             }
         }
     }
@@ -113,6 +91,13 @@ var rootDialog = new AdaptiveDialog(nameof(AdaptiveDialog))
 
             // The initial child Dialog to run.
             InitialDialogId = nameof(AdaptiveDialog);
+        }
+        private static LuisApplication GetLUISApp() {
+            return new LuisApplication() {
+                ApplicationId = "822278ff-e172-4e87-931f-d8bd5f40163e",
+                EndpointKey = "a95d07785b374f0a9d7d40700e28a285",
+                Endpoint = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0"
+            };
         }
         private static List<Dialog> WelcomeUserAction()
         {
