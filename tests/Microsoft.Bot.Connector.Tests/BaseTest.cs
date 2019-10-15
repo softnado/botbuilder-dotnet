@@ -19,7 +19,7 @@ namespace Microsoft.Bot.Connector.Tests
     /// <summary>
     /// WORKING WITH THESE TESTS
     ///   To run mocked and without recording:
-    ///       1. Set HttpRecorderMode to Playback
+    ///       1. Set HttpRecorderMode BaseTest.Mode to Playback
     ///
     ///   To run live or unmocked:
     ///       1. Set HttpRecorderMode to None
@@ -37,13 +37,11 @@ namespace Microsoft.Bot.Connector.Tests
     /// </summary>
     public class BaseTest
     {
-        private readonly HttpRecorderMode mode = HttpRecorderMode.Playback;
-
         private readonly string token;
 
         public BaseTest()
         {
-            if (mode == HttpRecorderMode.Record || mode == HttpRecorderMode.None)
+            if (Mode == HttpRecorderMode.Record || Mode == HttpRecorderMode.None)
             {
                 var credentials = new MicrosoftAppCredentials(ClientId, ClientSecret);
                 var task = credentials.GetTokenAsync();
@@ -51,7 +49,7 @@ namespace Microsoft.Bot.Connector.Tests
                 this.token = task.Result;
 
                 // Helpful for generating recordings when debugging locally
-                Environment.SetEnvironmentVariable("AZURE_TEST_MODE", mode.ToString());
+                Environment.SetEnvironmentVariable("AZURE_TEST_MODE", Mode.ToString());
             }
             else
             {
@@ -68,16 +66,27 @@ namespace Microsoft.Bot.Connector.Tests
 
         protected static Uri HostUri { get; set; } = new Uri("https://slack.botframework.com", UriKind.Absolute);
 
-        protected string ClientId { get; private set; } = "[MSAPP_ID]";
+        protected string ClientId { get; private set; } = Environment.GetEnvironmentVariable("TestBotAppId") ?? "[MSAPP_ID]";
 
-        protected string ClientSecret { get; private set; } = "[MSAPP_PASSWORD]";
+        protected string ClientSecret { get; private set; } = Environment.GetEnvironmentVariable("TestBotAppSecret") ?? "[MSAPP_PASS]";
 
-        protected string UserId { get; private set; } = "UK8CH2281:TKGSUQHQE";
+        protected string UserId { get; private set; } = Environment.GetEnvironmentVariable("SlackUserId") ?? "[SLACK_USERID]";
 
-        protected string BotId { get; private set; } = "BKGSYSTFG:TKGSUQHQE";
+        protected string BotId { get; private set; } = Environment.GetEnvironmentVariable("SlackBotId") ?? "[SLACK_BOTID]";
 
         private string ClassName => GetType().FullName;
 
+        private HttpRecorderMode Mode => GetRecorderMode();
+
+        public HttpRecorderMode GetRecorderMode()
+        {
+            if (Environment.GetEnvironmentVariable("HttpRecorderMode") == HttpRecorderMode.None.ToString())
+            {
+                return HttpRecorderMode.None;
+            }
+
+            return HttpRecorderMode.Playback;
+        }
 #pragma warning disable 162
 
         public async Task AssertTracingFor(
@@ -132,7 +141,7 @@ namespace Microsoft.Bot.Connector.Tests
         {
             using (var context = MockContext.Start(className ?? ClassName, methodName))
             {
-                HttpMockServer.Initialize(className ?? ClassName, methodName, mode);
+                HttpMockServer.Initialize(className ?? ClassName, methodName, Mode);
 
                 using (var client = new ConnectorClient(HostUri, new BotAccessTokenStub(token), handlers: HttpMockServer.CreateInstance()))
                 {
@@ -147,13 +156,13 @@ namespace Microsoft.Bot.Connector.Tests
         {
             using (var context = MockContext.Start(className ?? ClassName, methodName))
             {
-                HttpMockServer.Initialize(className ?? ClassName, methodName, mode);
+                HttpMockServer.Initialize(className ?? ClassName, methodName, Mode);
                 using (var oauthClient = new OAuthClient(new Uri(AuthenticationConstants.OAuthUrl), new BotAccessTokenStub(token), handlers: HttpMockServer.CreateInstance()))
                 {
                     await doTest(oauthClient);
                 }
 
-                if (mode == HttpRecorderMode.Record)
+                if (Mode == HttpRecorderMode.Record)
                 {
                     HttpMockServer.FileSystemUtilsObject = new FileSystemUtils();
                     HttpMockServer.Flush();
