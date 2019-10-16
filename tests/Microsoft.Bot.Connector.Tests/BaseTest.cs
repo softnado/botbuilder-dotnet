@@ -68,11 +68,11 @@ namespace Microsoft.Bot.Connector.Tests
 
         protected string ClientId { get; private set; } = Environment.GetEnvironmentVariable("TestBotAppId") ?? "[MSAPP_ID]";
 
-        protected string ClientSecret { get; private set; } = Environment.GetEnvironmentVariable("TestBotAppSecret") ?? "[MSAPP_PASS]";
+        protected string ClientSecret { get; private set; } = Environment.GetEnvironmentVariable("TestBotAppSecret") ?? "[MSAPP_PASSWORD]";
 
-        protected string UserId { get; private set; } = Environment.GetEnvironmentVariable("SlackUserId") ?? "[SLACK_USERID]";
+        protected string UserId { get; private set; } = Environment.GetEnvironmentVariable("SlackUserId") ?? "UK8CH2281:TKGSUQHQE";
 
-        protected string BotId { get; private set; } = Environment.GetEnvironmentVariable("SlackBotId") ?? "[SLACK_BOTID]";
+        protected string BotId { get; private set; } = Environment.GetEnvironmentVariable("SlackBotId") ?? "BKGSYSTFG:TKGSUQHQE";
 
         private string ClassName => GetType().FullName;
 
