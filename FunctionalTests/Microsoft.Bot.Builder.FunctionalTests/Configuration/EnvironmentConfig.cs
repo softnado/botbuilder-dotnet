@@ -31,5 +31,29 @@ namespace Microsoft.Bot.Builder.FunctionalTests.Configuration
 
             return testPassword;
         }
+
+        public static string SlackUser()
+        {
+            var testPassword = Environment.GetEnvironmentVariable("SlackUserId");
+
+            if (string.IsNullOrWhiteSpace(testPassword))
+            {
+                throw new Exception("Environment variable 'SlackUserId' not found.");
+            }
+
+            return testPassword;
+        }
+
+        public static string SlackBot()
+        {
+            var testPassword = Environment.GetEnvironmentVariable("SlackBotId");
+
+            if (string.IsNullOrWhiteSpace(testPassword))
+            {
+                throw new Exception("Environment variable 'SlackBotId' not found.");
+            }
+
+            return testPassword;
+        }
     }
 }
