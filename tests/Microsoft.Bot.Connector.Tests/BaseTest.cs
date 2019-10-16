@@ -168,8 +168,6 @@ namespace Microsoft.Bot.Connector.Tests
         /// <returns>HttpRecorderMode</returns>
         private static HttpRecorderMode GetRecorderMode()
         {
-            Console.WriteLine(HttpRecorderMode.Playback.ToString());
-
             if (Enum.TryParse(Environment.GetEnvironmentVariable("HttpRecorderMode"), true, out HttpRecorderMode mode))
             {
                 return mode;
