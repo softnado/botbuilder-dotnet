@@ -78,18 +78,7 @@ namespace Microsoft.Bot.Connector.Tests
 
         private HttpRecorderMode Mode => GetRecorderMode();
 
-        public HttpRecorderMode GetRecorderMode()
-        {
-            //if (Environment.GetEnvironmentVariable("HttpRecorderMode") == HttpRecorderMode.None.ToString())
-            //{
-            //    return HttpRecorderMode.None;
-            //}
-
-            //return HttpRecorderMode.Playback;
-            return HttpRecorderMode.None;
-        }
-#pragma warning disable 162
-
+        #pragma warning disable 162
         public async Task AssertTracingFor(
             Func<Task> doTest,
             string tracedMethodName,
@@ -171,6 +160,22 @@ namespace Microsoft.Bot.Connector.Tests
 
                 context.Stop();
             }
+        }
+
+        /// <summary>
+        /// Default to using test recordings if HttpRecorderMode isn't set in environment variables
+        /// </summary>
+        /// <returns>HttpRecorderMode</returns>
+        private static HttpRecorderMode GetRecorderMode()
+        {
+            Console.WriteLine(HttpRecorderMode.Playback.ToString());
+
+            if (Enum.TryParse(Environment.GetEnvironmentVariable("HttpRecorderMode"), true, out HttpRecorderMode mode))
+            {
+                return mode;
+            }
+
+            return HttpRecorderMode.Playback;
         }
     }
 }
