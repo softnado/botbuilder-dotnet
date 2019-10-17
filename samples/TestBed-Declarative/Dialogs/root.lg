@@ -9,3 +9,9 @@
 
 # NameReadBack
 - I have {$name} as your name
+
+# AskForColor
+- What is color '{$foreach.value}'?
+
+# AnswerReadBack
+- Your answers are {join($userAnswers, ', ')}

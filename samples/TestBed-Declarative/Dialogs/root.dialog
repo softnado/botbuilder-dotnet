@@ -22,7 +22,7 @@
                         {
                             "$type": "Microsoft.TextInput",
                             "property": "$userColorAnswer",
-                            "prompt": "What is color '{$foreach.value}'?",
+                            "prompt": "[AskForColor]",
                             "alwaysPrompt": true
                         },
                         {
@@ -35,7 +35,7 @@
                 },
                 {
                     "$type": "Microsoft.SendActivity",
-                    "activity": "Your answers are {join($userAnswers, ', ')}"
+                    "activity": "[AnswerReadBack]"
                 }
             ]
         }

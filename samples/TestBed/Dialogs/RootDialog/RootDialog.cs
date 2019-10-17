@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Adaptive;
 using Microsoft.Bot.Builder.LanguageGeneration;
-using Microsoft.Bot.Builder.Dialogs.Adaptive.Input;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Actions;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Templates;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Generators;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions;
-using Microsoft.Bot.Builder.Dialogs.Adaptive.Recognizers;
 using Microsoft.Bot.Builder.AI.Luis;
 
 namespace Microsoft.BotBuilderSamples
@@ -21,23 +19,9 @@ namespace Microsoft.BotBuilderSamples
         {
             var lgFile = Path.Combine(".", "Dialogs", "RootDialog", "RootDialog.lg");
             _templateEngine = new TemplateEngine().AddFile(lgFile);
-
-// ## 1.  Basic multi-turn conversation
-
-// Basic scenario of multi-input form flow. Here the user answers the questions directly in all cases.
-
-// | Who?  | Message                                                   |
-// |------:|:----------------------------------------------------------|
-// |User:  | Hi                                                        |
-// |Bot:   | Hello, I'm the demo bot. What is your name?               |
-// |User:  | vishwac                                                   |
-// |Bot:   | Hello, I have your name as 'vishwac'                      |
-// |Bot:   | What is your age?                                         |
-// |User:  | I'm 36                                                    |
-// |Bot:   | Thank you. I have your age as 36                          |    
 var rootDialog = new AdaptiveDialog(nameof(AdaptiveDialog))
 {
-    Generator = new TemplateEngineLanguageGenerator(),
+    Generator = new TemplateEngineLanguageGenerator(_templateEngine),
     Recognizer = new LuisRecognizer(GetLUISApp()),
     Triggers = new List<OnCondition>()
     {
@@ -48,38 +32,25 @@ var rootDialog = new AdaptiveDialog(nameof(AdaptiveDialog))
         new OnIntent() {
             Intent = "GetUserProfile",
             Actions = new List<Dialog>() {
-                new TextInput() {
-                    Prompt = new ActivityTemplate("Hello, I'm the demo bot. What is your name?"),
-                    Validations = new List<string>() {
-                        "count(this.value) >= 2",
-                        "count(this.value) <= 150"
-                    },
-                    InvalidPrompt = new ActivityTemplate("Sorry, '{this.value}' does not work. I'm looking for 2-150 characters. What is your name?"),
-                    Property = "$userName",
-                    MaxTurnCount = 3,
-                    DefaultValue = "'Human'",
-                    DefaultValueResponse = new ActivityTemplate("Sorry, I'm not getting it. For now, I'll set your name to '{%DefaultValue}'."),
-                    Value = "@personName"
+                new InitProperty() {
+                    Property = "user.lists",
+                    Type = "object"
+                },
+                new SetProperty() {
+                    Property = "$listName",
+                    Value = "'todo'"
+                },
+                new InitProperty() {
+                    Property = "user.lists[$listName]",
+                    Type = "array"
+                },
+                new EditArray() {
+                    ItemsProperty = "user.lists[$listName]",
+                    Value = "'one'",
+                    ChangeType = EditArray.ArrayChangeType.Push
                 },
                 new SendActivity() {
-                    Activity = new ActivityTemplate("Hello, I have your name as '{$userName}'")
-                },
-                new NumberInput() {
-                    Prompt = new ActivityTemplate("What is your age?"),
-                    Validations = new List<string>() {
-                        "int(this.value) >= 1",
-                        "int(this.value) <= 100"
-                    },
-                    InvalidPrompt = new ActivityTemplate("Sorry, '{this.value}' does not work. I'm looking for 1-150. What is your age?"),
-                    Property = "$userAge",
-                    UnrecognizedPrompt = new ActivityTemplate("Sorry, I do not recognize '{this.value}'. What is your age?"),
-                    MaxTurnCount = 3,
-                    DefaultValue = "30",
-                    DefaultValueResponse = new ActivityTemplate("Sorry, I'm not getting it. For now, I'll set your age to '{%DefaultValue}'."),
-                    Value = "@age"
-                },
-                new SendActivity() {
-                    Activity = new ActivityTemplate("Thank you. I have your age as '{$userAge}'")
+                    Activity = new ActivityTemplate("I have '{join(user.lists[$listName], ', ')}'")
                 }
             }
         }
@@ -96,7 +67,7 @@ var rootDialog = new AdaptiveDialog(nameof(AdaptiveDialog))
             return new LuisApplication() {
                 ApplicationId = "822278ff-e172-4e87-931f-d8bd5f40163e",
                 EndpointKey = "a95d07785b374f0a9d7d40700e28a285",
-                Endpoint = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0"
+                Endpoint = "https://westus.api.cognitive.microsoft.com"
             };
         }
         private static List<Dialog> WelcomeUserAction()
