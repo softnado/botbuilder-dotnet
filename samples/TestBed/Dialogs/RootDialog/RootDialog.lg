@@ -21,3 +21,19 @@
 
 # Suggestions (params)
 - {join(params, ' | ')}
+
+# GreetUser
+- OK{RandName()}, let's start again. \[Rand\]
+- Ok{RandName()}, let's start over. \[Rand\]
+- No problem, let's start again.
+- Done, let's start over.
+- Sure thing{RandName()}, we can start over. \[Rand\]
+
+# RandName 
+- IF: {user.name && rand(0, 1000) > 1}
+    - {concat(' ', CapitalizeFirstLetter(user.name))}
+- ELSE:
+    - 
+
+# CapitalizeFirstLetter(name) 
+- {concat(toUpper(substring(name, 0, 1)), substring(name, 1))}

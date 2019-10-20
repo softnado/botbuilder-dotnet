@@ -7,6 +7,7 @@ using Microsoft.Bot.Builder.Dialogs.Adaptive.Actions;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Templates;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Generators;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions;
+using Microsoft.Bot.Builder.Dialogs.Adaptive.Input;
 using Microsoft.Bot.Builder.AI.Luis;
 
 namespace Microsoft.BotBuilderSamples
@@ -22,35 +23,35 @@ namespace Microsoft.BotBuilderSamples
 var rootDialog = new AdaptiveDialog(nameof(AdaptiveDialog))
 {
     Generator = new TemplateEngineLanguageGenerator(_templateEngine),
-    Recognizer = new LuisRecognizer(GetLUISApp()),
+    //Recognizer = new LuisRecognizer(GetLUISApp()),
     Triggers = new List<OnCondition>()
     {
         new OnConversationUpdateActivity()
         {
             Actions = WelcomeUserAction()
         },
+        new OnBeginDialog() {
+            Actions = new List<Dialog>() {
+                new TextInput() {
+                    Property = "user.name",
+                    Prompt = new ActivityTemplate("What is your name?"),
+                    MaxTurnCount = 1
+                },
+                new SendActivity() {
+                    Activity = new ActivityTemplate("[GreetUser]")
+                }
+            }
+        },
         new OnIntent() {
             Intent = "GetUserProfile",
             Actions = new List<Dialog>() {
-                new InitProperty() {
-                    Property = "user.lists",
-                    Type = "object"
-                },
-                new SetProperty() {
-                    Property = "$listName",
-                    Value = "'todo'"
-                },
-                new InitProperty() {
-                    Property = "user.lists[$listName]",
-                    Type = "array"
-                },
-                new EditArray() {
-                    ItemsProperty = "user.lists[$listName]",
-                    Value = "'one'",
-                    ChangeType = EditArray.ArrayChangeType.Push
+                new TextInput() {
+                    Property = "user.name",
+                    Prompt = new ActivityTemplate("What is your name?"),
+                    MaxTurnCount = 1
                 },
                 new SendActivity() {
-                    Activity = new ActivityTemplate("I have '{join(user.lists[$listName], ', ')}'")
+                    Activity = new ActivityTemplate("[GreetUser]")
                 }
             }
         }
