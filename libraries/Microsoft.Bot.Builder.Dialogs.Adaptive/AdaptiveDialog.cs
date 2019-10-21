@@ -282,6 +282,17 @@ namespace Microsoft.Bot.Builder.Dialogs.Adaptive
                         if (handled)
                         {
                             sequenceContext.State.SetValue(TurnPath.INTERRUPTED, true);
+
+                            var child = sequenceContext.Child;
+                            while (child != null && child.Child != null)
+                            {
+                                child = child.Child;
+                            }
+
+                            if (child != null)
+                            {
+                                child.State.SetValue(TurnPath.INTERRUPTED, true);
+                            }
                         }
 
                         break;

@@ -30,7 +30,7 @@
         /// <summary>
         /// If true an interruption has occured.
         /// </summary>
-        public const string INTERRUPTED = "turn.interrupted";
+        public const string INTERRUPTED = "this.interrupted";
 
         /// <summary>
         /// The current dialog event (set during event processings).
