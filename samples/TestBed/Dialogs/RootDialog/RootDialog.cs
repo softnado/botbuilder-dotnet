@@ -7,6 +7,7 @@ using Microsoft.Bot.Builder.Dialogs.Adaptive.Actions;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Generators;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Input;
+using Microsoft.Bot.Builder.Dialogs.Adaptive.Recognizers;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Templates;
 using Microsoft.Bot.Builder.LanguageGeneration;
 
@@ -16,7 +17,7 @@ namespace Microsoft.BotBuilderSamples
     {
         private TemplateEngine _templateEngine;
 
-        public RootDialog() 
+        public RootDialog()
             : base(nameof(RootDialog))
         {
             var lgFile = Path.Combine(".", "Dialogs", "RootDialog", "RootDialog.lg");
@@ -24,45 +25,94 @@ namespace Microsoft.BotBuilderSamples
             var rootDialog = new AdaptiveDialog(nameof(AdaptiveDialog))
             {
                 Generator = new TemplateEngineLanguageGenerator(_templateEngine),
-                
-                //Recognizer = new LuisRecognizer(GetLUISApp()),
+                Recognizer = new RegexRecognizer()
+                {
+                    Intents = new List<IntentPattern>()
+                    {
+                        new IntentPattern()
+                        {
+                            Intent = "start",
+                            Pattern = "start"
+                        },
+                        new IntentPattern()
+                        {
+                            Intent = "cancel",
+                            Pattern = "cancel"
+                        },
+                        new IntentPattern()
+                        {
+                            Intent = "set_name",
+                            Pattern = "set name"
+                        }
+                    }
+                },
                 Triggers = new List<OnCondition>()
                 {
                     new OnConversationUpdateActivity()
                     {
                         Actions = WelcomeUserAction()
                     },
-                    new OnBeginDialog()
+                    new OnIntent()
                     {
+                        Intent = "set_name",
                         Actions = new List<Dialog>()
                         {
                             new TextInput()
                             {
-                                Property = "user.name",
-                                Prompt = new ActivityTemplate("What is your name?"),
-                                MaxTurnCount = 1
+                                Prompt = new ActivityTemplate("\\[set name]::What is your name?"),
+                                Property = "$userName",
+                                AlwaysPrompt = true
                             },
                             new SendActivity()
                             {
-                                Activity = new ActivityTemplate("[GreetUser]")
+                                Activity = new ActivityTemplate("\\[set name]I have {$userName} as your name")
                             }
                         }
                     },
                     new OnIntent()
                     {
-                        Intent = "GetUserProfile",
+                        Intent = "start",
                         Actions = new List<Dialog>()
                         {
                             new TextInput()
                             {
-                                Property = "user.name",
-                                Prompt = new ActivityTemplate("What is your name?"),
-                                MaxTurnCount = 1
+                                Prompt = new ActivityTemplate("\\[start]::What is your name?"),
+                                Property = "$userName",
+                                AllowInterruptions = "false"
                             },
                             new SendActivity()
                             {
-                                Activity = new ActivityTemplate("[GreetUser]")
+                                Activity = new ActivityTemplate("\\[start]::I have {$userName} as your name")
+                            },
+                            new DateTimeInput()
+                            {
+                                Prompt = new ActivityTemplate("Give me date 1"),
+                                UnrecognizedPrompt = new ActivityTemplate("Unrecognized, give me date 1"),
+                                Property = "$fromDate",
+                                AllowInterruptions = "true"
+                            },
+                            new SendActivity()
+                            {
+                                Activity = new ActivityTemplate("\\[start]:: I have {$fromDate} as date 1")
+                            },
+                            new DateTimeInput()
+                            {
+                                Prompt = new ActivityTemplate("Give me date 2"),
+                                Property = "$toDate",
+                                AllowInterruptions = "true"
+                            },
+                            new SendActivity()
+                            {
+                                Activity = new ActivityTemplate("\\[start]:: I have {$toDate} as date 2")
                             }
+                        }
+                    },
+                    new OnIntent()
+                    {
+                        Intent = "cancel",
+                        Actions = new List<Dialog>()
+                        {
+                            new SendActivity("{WelcomeUser()}")
                         }
                     }
                 }
