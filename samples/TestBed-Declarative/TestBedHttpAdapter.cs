@@ -14,9 +14,7 @@ namespace Microsoft.BotBuilderSamples
 {
     public class TestBedHttpAdapter : BotFrameworkHttpAdapter
     {
-        public TestBedHttpAdapter(ICredentialProvider credentialProvider,
-            IConfiguration configuration, ILogger<BotFrameworkHttpAdapter> logger,
-            IStorage storage, UserState userState, ConversationState conversationState, ResourceExplorer resourceExplorer)
+        public TestBedHttpAdapter(ICredentialProvider credentialProvider, IConfiguration configuration, ILogger<BotFrameworkHttpAdapter> logger, IStorage storage, UserState userState, ConversationState conversationState, ResourceExplorer resourceExplorer)
             : base(credentialProvider)
         {
             this.Use(new RegisterClassMiddleware<IConfiguration>(configuration));
@@ -29,7 +27,6 @@ namespace Microsoft.BotBuilderSamples
 
             this.OnTurnError = async (turnContext, exception) =>
             {
-
                 // Log any leaked exception from the application.
                 logger.LogError($"Exception caught : {exception.Message}");
 

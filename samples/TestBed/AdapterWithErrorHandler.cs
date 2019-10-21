@@ -4,13 +4,13 @@
 using System;
 using System.IO;
 using Microsoft.Bot.Builder;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Bot.Connector.Authentication;
-using Microsoft.Bot.Builder.LanguageGeneration;
-using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Builder.Dialogs.Adaptive;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Generators;
+using Microsoft.Bot.Builder.Integration.AspNet.Core;
+using Microsoft.Bot.Builder.LanguageGeneration;
+using Microsoft.Bot.Connector.Authentication;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Microsoft.BotBuilderSamples
 {
@@ -18,8 +18,7 @@ namespace Microsoft.BotBuilderSamples
     {
         private TemplateEngine _templateEngine;
 
-        public AdapterWithErrorHandler(ICredentialProvider credentialProvider, ILogger<BotFrameworkHttpAdapter> logger, IStorage storage,
-            UserState userState, ConversationState conversationState, IConfiguration configuration)
+        public AdapterWithErrorHandler(ICredentialProvider credentialProvider, ILogger<BotFrameworkHttpAdapter> logger, IStorage storage, UserState userState, ConversationState conversationState, IConfiguration configuration)
             : base(credentialProvider)
         {
             this.UseStorage(storage);
@@ -32,9 +31,8 @@ namespace Microsoft.BotBuilderSamples
             {
                 // Log any leaked exception from the application.
                 logger.LogError($"Exception caught : {exception.Message}");
-                var result = _templateEngine.Evaluate("", null);
-                // Send a catch-all apology to the user.
-                await turnContext.SendActivityAsync(MessageFactory.Text(_templateEngine.Evaluate("").ToString()));
+                var result = _templateEngine.Evaluate("SomethingWentWrong", null);
+                await turnContext.SendActivityAsync(MessageFactory.Text(_templateEngine.Evaluate("SomethingWentWrong").ToString()));
 
                 if (conversationState != null)
                 {

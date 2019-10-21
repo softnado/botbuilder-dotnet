@@ -26,9 +26,9 @@ namespace Microsoft.BotBuilderSamples
             TypeFactory.Configuration = Configuration;
         }
 
-        IConfiguration Configuration { get; set; }
+        private IConfiguration Configuration { get; set; }
 
-        IHostingEnvironment HostingEnvironment { get; set; }
+        private IHostingEnvironment HostingEnvironment { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)

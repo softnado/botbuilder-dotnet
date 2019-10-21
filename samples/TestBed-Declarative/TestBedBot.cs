@@ -21,7 +21,6 @@ namespace Microsoft.BotBuilderSamples
     public class TestBedBot : ActivityHandler
     {
         private IStatePropertyAccessor<DialogState> dialogStateAccessor;
-        private AdaptiveDialog rootDialog;
         private readonly ResourceExplorer resourceExplorer;
         private DialogManager _dialogManager;
 
@@ -61,6 +60,5 @@ namespace Microsoft.BotBuilderSamples
 
             System.Diagnostics.Trace.TraceInformation("Done loading resources.");
         }
-
     }
 }

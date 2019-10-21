@@ -153,6 +153,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.Skill
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.Skills.Tests", "tests\Microsoft.Bot.Builder.Skills.Tests\Microsoft.Bot.Builder.Skills.Tests.csproj", "{96167FDC-8D49-4767-AE58-22933C246C67}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{BEBF4963-4C11-45C8-ABF3-C22B2F3BC7A1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestBed", "samples\TestBed\TestBed.csproj", "{F65F9321-D40D-4672-A4BF-7D4C34C81FAB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestBed-Declarative", "samples\TestBed-Declarative\TestBed-Declarative.csproj", "{B73FC371-5415-441F-B539-5E585F4FEF60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -609,6 +615,22 @@ Global
 		{96167FDC-8D49-4767-AE58-22933C246C67}.Release|Any CPU.Build.0 = Release|Any CPU
 		{96167FDC-8D49-4767-AE58-22933C246C67}.Release-Windows|Any CPU.ActiveCfg = Release|Any CPU
 		{96167FDC-8D49-4767-AE58-22933C246C67}.Release-Windows|Any CPU.Build.0 = Release|Any CPU
+		{F65F9321-D40D-4672-A4BF-7D4C34C81FAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F65F9321-D40D-4672-A4BF-7D4C34C81FAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F65F9321-D40D-4672-A4BF-7D4C34C81FAB}.Debug-Windows|Any CPU.ActiveCfg = Debug|Any CPU
+		{F65F9321-D40D-4672-A4BF-7D4C34C81FAB}.Debug-Windows|Any CPU.Build.0 = Debug|Any CPU
+		{F65F9321-D40D-4672-A4BF-7D4C34C81FAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F65F9321-D40D-4672-A4BF-7D4C34C81FAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F65F9321-D40D-4672-A4BF-7D4C34C81FAB}.Release-Windows|Any CPU.ActiveCfg = Release|Any CPU
+		{F65F9321-D40D-4672-A4BF-7D4C34C81FAB}.Release-Windows|Any CPU.Build.0 = Release|Any CPU
+		{B73FC371-5415-441F-B539-5E585F4FEF60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B73FC371-5415-441F-B539-5E585F4FEF60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B73FC371-5415-441F-B539-5E585F4FEF60}.Debug-Windows|Any CPU.ActiveCfg = Debug|Any CPU
+		{B73FC371-5415-441F-B539-5E585F4FEF60}.Debug-Windows|Any CPU.Build.0 = Debug|Any CPU
+		{B73FC371-5415-441F-B539-5E585F4FEF60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B73FC371-5415-441F-B539-5E585F4FEF60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B73FC371-5415-441F-B539-5E585F4FEF60}.Release-Windows|Any CPU.ActiveCfg = Release|Any CPU
+		{B73FC371-5415-441F-B539-5E585F4FEF60}.Release-Windows|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -676,6 +698,8 @@ Global
 		{D243AC2D-7823-4177-9D8A-23FDFDA274D2} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
 		{01ADC4CC-029D-4720-9860-32D7E223F8D8} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
 		{96167FDC-8D49-4767-AE58-22933C246C67} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
+		{F65F9321-D40D-4672-A4BF-7D4C34C81FAB} = {BEBF4963-4C11-45C8-ABF3-C22B2F3BC7A1}
+		{B73FC371-5415-441F-B539-5E585F4FEF60} = {BEBF4963-4C11-45C8-ABF3-C22B2F3BC7A1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7173C9F3-A7F9-496E-9078-9156E35D6E16}
