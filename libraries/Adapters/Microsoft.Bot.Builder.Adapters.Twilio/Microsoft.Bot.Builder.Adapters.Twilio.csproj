@@ -11,8 +11,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Microsoft.Bot.Builder.Adapters.Twilio</PackageId>
-    <Description>description</Description>
-    <Summary>This library implements C# classes for twilio adapter</Summary>
+    <Description>Library for connecting bots with Twilio SMS API.</Description>
+    <Summary>This library implements C# classes for Twilio adapter.</Summary>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -29,9 +29,10 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Twilio" Version="5.31.1" />
+    <PackageReference Include="Twilio" Version="5.33.1" />
     <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Condition=" '$(PackageVersion)' == '' " Version="4.6.0-local" />
     <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Condition=" '$(PackageVersion)' != '' " Version="$(PackageVersion)" />
+    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" />
   </ItemGroup>
 
   <ItemGroup>
