@@ -41,14 +41,9 @@ namespace Microsoft.BotBuilderSamples
             LoadRootDialogAsync();
         }
 
-        protected async override Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
+        public async override Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await _dialogManager.OnTurnAsync(turnContext, null, cancellationToken).ConfigureAwait(false);
-        }
-
-        protected override Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
-        {
-            return base.OnMembersAddedAsync(membersAdded, turnContext, cancellationToken);
+            await _dialogManager.OnTurnAsync(turnContext, cancellationToken).ConfigureAwait(false);
         }
 
         private void LoadRootDialogAsync()
