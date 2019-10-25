@@ -5,11 +5,11 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.AI.Luis;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Adaptive;
-using Microsoft.Bot.Builder.Dialogs.Adaptive.Input;
+using Microsoft.Bot.Builder.Dialogs.Adaptive.Actions;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Generators;
+using Microsoft.Bot.Builder.Dialogs.Adaptive.Input;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Templates;
-using Microsoft.Bot.Builder.Dialogs.Adaptive.Actions;
 using Microsoft.Bot.Builder.LanguageGeneration;
 using Microsoft.Extensions.Configuration;
 
@@ -17,15 +17,15 @@ namespace Microsoft.BotBuilderSamples
 {
     public class RootDialog : ComponentDialog
     {
-        protected readonly IConfiguration Configuration;
+        private readonly IConfiguration _configuration;
         private TemplateEngine _lgEngine;
 
         public RootDialog(IConfiguration configuration)
            : base(nameof(RootDialog))
         {
-            Configuration = configuration;
+            _configuration = configuration;
             _lgEngine = new TemplateEngine().AddFile(Path.Combine(".", "Dialogs", "RootDialog.lg"));
-            
+
             // Create instance of adaptive dialog. 
             var rootDialog = new AdaptiveDialog(nameof(AdaptiveDialog))
             {
@@ -35,7 +35,8 @@ namespace Microsoft.BotBuilderSamples
                 // Add a recognizer to this adaptive dialog.
                 // For this dialog, we will use the LUIS recognizer based on the FlightBooking.json
                 // found under CognitiveModels folder.
-                Recognizer = CreateRecognizer(configuration),
+                Recognizer = CreateRecognizer(_configuration),
+
                 // Add rules to respond to different events of interest
                 //Rules = CreateRules()
                 Generator = new TemplateEngineLanguageGenerator(_lgEngine),
@@ -46,6 +47,7 @@ namespace Microsoft.BotBuilderSamples
                     {
                         Actions = WelcomeUserSteps()
                     },
+
                     // Add additional rules to respond to other intents returned by the LUIS application.
                     // The intents here are based on intents defined in MainAdaptiveDialog.LU file
                     new OnIntent()
@@ -63,7 +65,7 @@ namespace Microsoft.BotBuilderSamples
                     {
                         Intent = "Help",
                         Condition = "#Help.Score >= 0.8",
-                        Actions = new List<Dialog> ()
+                        Actions = new List<Dialog>()
                         {
                             new SendActivity("@{BotOverview()}")
                         }
@@ -71,14 +73,15 @@ namespace Microsoft.BotBuilderSamples
                     new OnIntent()
                     {
                         Intent = "Greeting",
-                        Actions = new List<Dialog> ()
+                        Actions = new List<Dialog>()
                         {
                             new SendActivity("@{BotOverview()}")
                         }
                     },
-                    new OnUnknownIntent() 
+                    new OnUnknownIntent()
                     {
-                        Actions = new List<Dialog>() {
+                        Actions = new List<Dialog>()
+                        {
                             new SendActivity("@{UnknownIntent()}")
                         }
                     },
@@ -91,6 +94,7 @@ namespace Microsoft.BotBuilderSamples
                             new SetProperty()
                             {
                                 Property = "conversation.flightBooking.departureCity",
+
                                 // Value is an expresson. @entityName is short hand to refer to the value of an entity recognized.
                                 // @xxx is same as turn.recognized.entities.xxx
                                 Value = "@fromCity"
@@ -105,43 +109,55 @@ namespace Microsoft.BotBuilderSamples
                                 Property = "conversation.flightBooking.departureDate",
                                 Value = "@datetime.timex"
                             },
+
                             // Steps to book flight
                             // Help and Cancel intents are always available since TextInput will always initiate
                             // Consulatation up the parent dialog chain to see if anyone else wants to take the user input.
                             new TextInput()
                             {
                                 Property = "conversation.flightBooking.departureCity",
+
                                 // Prompt property supports full language generation resolution.
                                 // See here to learn more about language generation
                                 // https://github.com/Microsoft/BotBuilder-Samples/tree/master/experimental/language-generation
                                 Prompt = new ActivityTemplate("@{PromptForMissingInformation()}"),
+
                                 // We will allow interruptions as long as the user did not explicitly answer the question
                                 // This property supports an expression so you can examine presence of an intent via #intentName, 
                                 //    detect presence of an entity via @entityName etc. Interruption is allowed if the expression
                                 //    evaluates to `true`. This property defaults to `true`.
                                 AllowInterruptions = "!@fromCity || !@geographyV2",
-                                // Value is an expression. Here, we are using coalesce prebuilt function that takes the first non-null
-                                // value from the parameters list.
-                                Value = "coalesce(@fromCity, @geographyV2)"
+
+                                // Value is an expression. Take any recognized city name as fromCity
+                                Value = "@geographyV2"
+                            },
+                            new SendActivity()
+                            {
+                                Activity = new ActivityTemplate("Have inputs!")
                             },
                             new TextInput()
                             {
                                 Property = "conversation.flightBooking.destinationCity",
                                 Prompt = new ActivityTemplate("@{PromptForMissingInformation()}"),
                                 AllowInterruptions = "!@toCity || !@geographyV2",
-                                Value = "coalesce(@toCity, @geographyV2)"
+
+                                // Value is an expression. Take any recognized city name as fromCity
+                                Value = "@geographyV2"
                             },
                             new DateTimeInput()
                             {
                                 Property = "conversation.flightBooking.departureDate",
                                 Prompt = new ActivityTemplate("@{PromptForMissingInformation()}"),
                                 AllowInterruptions = "!@datetime",
-                                Value = "coalesce(@datetime.timex, @fromDate.timex)"
+
+                                // Value is an expression. Take any date time entity recognition as deparature date.
+                                Value = "@datetime.timex"
                             },
                             new ConfirmInput()
                             {
                                 Property = "turn.bookingConfirmation",
                                 Prompt = new ActivityTemplate("@{ConfirmBooking()}"),
+
                                 // You can use this flag to control when a specific input participates in consultation bubbling and can be interrupted.
                                 // 'false' means intteruption is not allowed when this input is active.
                                 AllowInterruptions = "false"
@@ -204,12 +220,12 @@ namespace Microsoft.BotBuilderSamples
             {
                 throw new Exception("NOTE: LUIS is not configured. To enable all capabilities, add 'LuisAppId', 'LuisAPIKey' and 'LuisAPIHostName' to the appsettings.json file.");
             }
+
             // Create the LUIS settings from configuration.
             var luisApplication = new LuisApplication(
                 configuration["LuisAppId"],
                 configuration["LuisAPIKey"],
-                "https://" + configuration["LuisAPIHostName"]
-            );
+                "https://" + configuration["LuisAPIHostName"]);
 
             return new LuisRecognizer(luisApplication);
         }

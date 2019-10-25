@@ -5,8 +5,8 @@ using System;
 using System.IO;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs.Debugging;
-using Microsoft.Bot.Builder.LanguageGeneration;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
+using Microsoft.Bot.Builder.LanguageGeneration;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -17,8 +17,8 @@ namespace Microsoft.BotBuilderSamples
     public class AdapterWithErrorHandler : BotFrameworkHttpAdapter
     {
         private TemplateEngine _lgEngine;
-        public AdapterWithErrorHandler(ICredentialProvider credentialProvider, ILogger<BotFrameworkHttpAdapter> logger, IStorage storage,
-            UserState userState, ConversationState conversationState, IConfiguration configuration)
+
+        public AdapterWithErrorHandler(ICredentialProvider credentialProvider, ILogger<BotFrameworkHttpAdapter> logger, IStorage storage, UserState userState, ConversationState conversationState, IConfiguration configuration)
             : base(credentialProvider)
         {
             this.UseStorage(storage);
