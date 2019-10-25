@@ -74,36 +74,17 @@ namespace Microsoft.BotBuilderSamples
                         Intent = "start",
                         Actions = new List<Dialog>()
                         {
-                            new TextInput()
+                            new SetProperty() 
                             {
-                                Prompt = new ActivityTemplate("\\[start]::What is your name?"),
-                                Property = "$userName",
-                                AllowInterruptions = "false"
+                                Property = "@foo",
+                                Value = "'test'"
                             },
-                            new SendActivity()
-                            {
-                                Activity = new ActivityTemplate("\\[start]::I have {$userName} as your name")
+                            new SetProperty() {
+                                Property = "@bar",
+                                Value = "coalesce(@foo, null)"
                             },
-                            new DateTimeInput()
-                            {
-                                Prompt = new ActivityTemplate("Give me date 1"),
-                                UnrecognizedPrompt = new ActivityTemplate("Unrecognized, give me date 1"),
-                                Property = "$fromDate",
-                                AllowInterruptions = "true"
-                            },
-                            new SendActivity()
-                            {
-                                Activity = new ActivityTemplate("\\[start]:: I have {$fromDate} as date 1")
-                            },
-                            new DateTimeInput()
-                            {
-                                Prompt = new ActivityTemplate("Give me date 2"),
-                                Property = "$toDate",
-                                AllowInterruptions = "true"
-                            },
-                            new SendActivity()
-                            {
-                                Activity = new ActivityTemplate("\\[start]:: I have {$toDate} as date 2")
+                            new SendActivity() {
+                                Activity = new ActivityTemplate("I have {@bar}")
                             }
                         }
                     },
