@@ -74,10 +74,14 @@ namespace Microsoft.BotBuilderSamples
                         Intent = "start",
                         Actions = new List<Dialog>()
                         {
-                            new SetProperty() 
-                            {
-                                Property = "@foo",
-                                Value = "'test'"
+                            new InitProperty() {
+                                Property = "turn.recognized.entities.foo",
+                                Type = "array"
+                            },
+                            new EditArray() {
+                                ItemsProperty = "turn.recognized.entities.foo",
+                                Value = "'test'",
+                                ChangeType = EditArray.ArrayChangeType.Push
                             },
                             new SetProperty() {
                                 Property = "@bar",
