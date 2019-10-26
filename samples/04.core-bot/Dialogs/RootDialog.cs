@@ -97,12 +97,12 @@ namespace Microsoft.BotBuilderSamples
 
                                 // Value is an expresson. @entityName is short hand to refer to the value of an entity recognized.
                                 // @xxx is same as turn.recognized.entities.xxx
-                                Value = "@fromCity"
+                                Value = "@fromCity.location"
                             },
                             new SetProperty()
                             {
                                 Property = "conversation.flightBooking.destinationCity",
-                                Value = "@toCity"
+                                Value = "@toCity.location"
                             },
                             new SetProperty()
                             {
