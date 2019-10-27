@@ -1,36 +1,41 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using Microsoft.Bot.Builder;
-using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Builder.Dialogs.Adaptive;
-using Microsoft.Bot.Builder.Dialogs.Adaptive.Input;
-using Microsoft.Bot.Builder.Dialogs.Adaptive.Recognizers;
-using Microsoft.Bot.Builder.Dialogs.Adaptive.Actions;
-using Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions;
-using Microsoft.Bot.Builder.Dialogs.Adaptive.Templates;
-using Microsoft.Bot.Builder.Dialogs.Adaptive.Generators;
-using Microsoft.Bot.Builder.LanguageGeneration;
-
-namespace Microsoft.BotBuilderSamples
+﻿namespace Microsoft.BotBuilderSamples
 {
+    using System.Collections.Generic;
+    using System.IO;
+    using Microsoft.Bot.Builder;
+    using Microsoft.Bot.Builder.Dialogs;
+    using Microsoft.Bot.Builder.Dialogs.Adaptive;
+    using Microsoft.Bot.Builder.Dialogs.Adaptive.Actions;
+    using Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions;
+    using Microsoft.Bot.Builder.Dialogs.Adaptive.Generators;
+    using Microsoft.Bot.Builder.Dialogs.Adaptive.Input;
+    using Microsoft.Bot.Builder.Dialogs.Adaptive.Recognizers;
+    using Microsoft.Bot.Builder.Dialogs.Adaptive.Templates;
+    using Microsoft.Bot.Builder.LanguageGeneration;
+
     public class AddToDoDialog : ComponentDialog
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddToDoDialog"/> class.
+        /// </summary>
         public AddToDoDialog()
             : base(nameof(AddToDoDialog))
         {
             string[] paths = { ".", "Dialogs", "AddToDoDialog", "AddToDoDialog.lg" };
             string fullPath = Path.Combine(paths);
-            // Create instance of adaptive dialog. 
+
+            // Create instance of adaptive dialog.
             var AddToDoDialog = new AdaptiveDialog(nameof(AdaptiveDialog))
             {
                 Generator = new TemplateEngineLanguageGenerator(new TemplateEngine().AddFile(fullPath)),
+
                 // Create and use a regex recognizer on the child
-                // Each child adaptive dialog can have its own recognizer. 
-                // This sample demonstrates use of a regex recognizer in a child dialog. 
+                // Each child adaptive dialog can have its own recognizer.
+                // This sample demonstrates use of a regex recognizer in a child dialog.
                 Recognizer = CreateRegeExRecognizer(),
                 Triggers = new List<OnCondition>()
                 {
-                    new OnBeginDialog() 
+                    new OnBeginDialog()
                     {
                         Actions = new List<Dialog>()
                         {
@@ -38,39 +43,44 @@ namespace Microsoft.BotBuilderSamples
                             // This is the title entity defined in ../RootDialog/RootDialog.lu.
                             // There is one LUIS application for this bot. So any entity captured by the rootDialog
                             // will be automatically available to child dialog.
-                            // @EntityName is a short-hand for turn.entities.<EntityName>. Other useful short-hands are 
+                            // @EntityName is a short-hand for turn.entities.<EntityName>. Other useful short-hands are
                             //     #IntentName is a short-hand for turn.intents.<IntentName>
                             //     $PropertyName is a short-hand for dialog.<PropertyName>
-                            new SetProperty() {
+                            new SetProperty()
+                            {
                                 Property = "turn.todoTitle",
-                                Value = "@todoTitle"
+                                Value = "@todoTitle",
                             },
+
                             // TextInput by default will skip the prompt if the property has value.
                             new TextInput()
                             {
                                 Property = "turn.todoTitle",
-                                Prompt = new ActivityTemplate("@{Get-ToDo-Title()}")
+                                Prompt = new ActivityTemplate("@{Get-ToDo-Title()}"),
                             },
+
                             // Add the new todo title to the list of todos. Keep the list of todos in the user scope.
                             new EditArray()
                             {
                                 Value = "turn.todoTitle",
                                 ItemsProperty = "user.todos",
-                                ChangeType = EditArray.ArrayChangeType.Push
+                                ChangeType = EditArray.ArrayChangeType.Push,
                             },
-                            new SendActivity("@{Add-ToDo-ReadBack()}")
-                            // All child dialogs will automatically end if there are no additional steps to execute. 
-                            // If you wish for a child dialog to not end automatically, you can set 
+                            new SendActivity("@{Add-ToDo-ReadBack()}"),
+
+                            // All child dialogs will automatically end if there are no additional steps to execute.
+                            // If you wish for a child dialog to not end automatically, you can set
                             // AutoEndDialog property on the Adaptive Dialog to 'false'
-                        }
+                        },
                     },
+
                     // Handle local help
                     new OnIntent("Help")
                     {
                         Actions = new List<Dialog>()
                         {
-                            new SendActivity("@{Help-Add-ToDo()}")
-                        }
+                            new SendActivity("@{Help-Add-ToDo()}"),
+                        },
                     },
                     new OnIntent("Cancel")
                     {
@@ -79,11 +89,11 @@ namespace Microsoft.BotBuilderSamples
                             new ConfirmInput()
                             {
                                 Property = "turn.addTodo.cancelConfirmation",
-                                Prompt = new ActivityTemplate("@{Confirm-cancellation()}")
+                                Prompt = new ActivityTemplate("@{Confirm-cancellation()}"),
                             },
-                            new SendActivity() 
+                            new SendActivity()
                             {
-                                Activity = new ActivityTemplate("@{turn.addTodo.cancelConfirmation}")
+                                Activity = new ActivityTemplate("@{turn.addTodo.cancelConfirmation}"),
                             },
                             new IfCondition()
                             {
@@ -93,17 +103,19 @@ namespace Microsoft.BotBuilderSamples
                                 Actions = new List<Dialog>()
                                 {
                                     new SendActivity("@{Cancel-add-todo()}"),
-                                    new EndDialog()
+                                    new EndDialog(),
                                 },
                                 ElseActions = new List<Dialog>()
                                 {
-                                    new SendActivity("@{Help-prefix()}, let's get right back to adding a todo.")
-                                }
+                                    new SendActivity("@{Help-prefix()}, let's get right back to adding a todo."),
+                                },
+
                                 // We do not need to specify an else block here since if user said no,
                                 // the control flow will automatically return to the last active step (if any)
-                            }
-                        }
+                            },
+                        },
                     },
+
                     // Since we are using a regex recognizer, anything except for help or cancel will come back as none intent.
                     // If so, just accept user's response as the title of the todo and move forward.
                     new OnIntent("None")
@@ -111,20 +123,21 @@ namespace Microsoft.BotBuilderSamples
                         Actions = new List<Dialog>()
                         {
                             // Set what user said as the todo title.
-                            new SetProperty() {
+                            new SetProperty()
+                            {
                                 Property = "turn.todoTitle",
-                                Value = "turn.activity.text"
-                            }
-                        }
-                    }
-                }
+                                Value = "turn.activity.text",
+                            },
+                        },
+                    },
+                },
             };
 
             // Add named dialogs to the DialogSet. These names are saved in the dialog state.
-            AddDialog(AddToDoDialog);
+            this.AddDialog(AddToDoDialog);
 
             // The initial child Dialog to run.
-            InitialDialogId = nameof(AdaptiveDialog);
+            this.InitialDialogId = nameof(AdaptiveDialog);
         }
 
         private static IRecognizer CreateRegeExRecognizer()
@@ -133,15 +146,17 @@ namespace Microsoft.BotBuilderSamples
             {
                 Intents = new List<IntentPattern>
                 {
-                    new IntentPattern() { 
-                        Intent = "Help", 
-                        Pattern = "(?i)help" 
+                    new IntentPattern()
+                    {
+                        Intent = "Help",
+                        Pattern = "(?i)help",
                     },
-                    new IntentPattern() {
-                        Intent = "Cancel", 
-                        Pattern = "(?i)cancel|never mind" 
-                    }
-                }
+                    new IntentPattern()
+                    {
+                        Intent = "Cancel",
+                        Pattern = "(?i)cancel|never mind",
+                    },
+                },
             };
         }
     }

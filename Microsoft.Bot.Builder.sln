@@ -1,4 +1,5 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -167,11 +168,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.Adapt
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{BB5F2C28-EB07-458D-9AA0-023ED7EF6346}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBed", "samples\TestBed\TestBed.csproj", "{067B9D5D-F0C0-4D3F-9F29-42FAC7FC85A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestBed", "samples\TestBed\TestBed.csproj", "{067B9D5D-F0C0-4D3F-9F29-42FAC7FC85A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBed-Declarative", "samples\TestBed-Declarative\TestBed-Declarative.csproj", "{7EB33606-4704-4230-91FC-9BF493D89062}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestBed-Declarative", "samples\TestBed-Declarative\TestBed-Declarative.csproj", "{7EB33606-4704-4230-91FC-9BF493D89062}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreBot", "samples\04.core-bot\CoreBot.csproj", "{335CF801-6C06-4620-A243-CC630F10E5F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoBotWithLUIS", "samples\csharp_dotnetcore\todo-bot\ToDoBotWithLUIS.csproj", "{0CAB7B17-7D6C-40AB-A8A0-15D3E1B80EE4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -824,16 +825,16 @@ Global
 		{7EB33606-4704-4230-91FC-9BF493D89062}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7EB33606-4704-4230-91FC-9BF493D89062}.Release-Windows|Any CPU.ActiveCfg = Debug|Any CPU
 		{7EB33606-4704-4230-91FC-9BF493D89062}.Release-Windows|Any CPU.Build.0 = Debug|Any CPU
-		{335CF801-6C06-4620-A243-CC630F10E5F4}.Debug - NuGet Packages|Any CPU.ActiveCfg = Debug|Any CPU
-		{335CF801-6C06-4620-A243-CC630F10E5F4}.Debug - NuGet Packages|Any CPU.Build.0 = Debug|Any CPU
-		{335CF801-6C06-4620-A243-CC630F10E5F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{335CF801-6C06-4620-A243-CC630F10E5F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{335CF801-6C06-4620-A243-CC630F10E5F4}.Debug-Windows|Any CPU.ActiveCfg = Debug|Any CPU
-		{335CF801-6C06-4620-A243-CC630F10E5F4}.Debug-Windows|Any CPU.Build.0 = Debug|Any CPU
-		{335CF801-6C06-4620-A243-CC630F10E5F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{335CF801-6C06-4620-A243-CC630F10E5F4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{335CF801-6C06-4620-A243-CC630F10E5F4}.Release-Windows|Any CPU.ActiveCfg = Debug|Any CPU
-		{335CF801-6C06-4620-A243-CC630F10E5F4}.Release-Windows|Any CPU.Build.0 = Debug|Any CPU
+		{0CAB7B17-7D6C-40AB-A8A0-15D3E1B80EE4}.Debug - NuGet Packages|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CAB7B17-7D6C-40AB-A8A0-15D3E1B80EE4}.Debug - NuGet Packages|Any CPU.Build.0 = Debug|Any CPU
+		{0CAB7B17-7D6C-40AB-A8A0-15D3E1B80EE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CAB7B17-7D6C-40AB-A8A0-15D3E1B80EE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CAB7B17-7D6C-40AB-A8A0-15D3E1B80EE4}.Debug-Windows|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CAB7B17-7D6C-40AB-A8A0-15D3E1B80EE4}.Debug-Windows|Any CPU.Build.0 = Debug|Any CPU
+		{0CAB7B17-7D6C-40AB-A8A0-15D3E1B80EE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CAB7B17-7D6C-40AB-A8A0-15D3E1B80EE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CAB7B17-7D6C-40AB-A8A0-15D3E1B80EE4}.Release-Windows|Any CPU.ActiveCfg = Release|Any CPU
+		{0CAB7B17-7D6C-40AB-A8A0-15D3E1B80EE4}.Release-Windows|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -909,7 +910,6 @@ Global
 		{C8E31CD2-89D4-4659-9557-43EC9C99D984} = {6230B915-B238-4E57-AAC4-06B4498F540F}
 		{067B9D5D-F0C0-4D3F-9F29-42FAC7FC85A3} = {BB5F2C28-EB07-458D-9AA0-023ED7EF6346}
 		{7EB33606-4704-4230-91FC-9BF493D89062} = {BB5F2C28-EB07-458D-9AA0-023ED7EF6346}
-		{335CF801-6C06-4620-A243-CC630F10E5F4} = {BB5F2C28-EB07-458D-9AA0-023ED7EF6346}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7173C9F3-A7F9-496E-9078-9156E35D6E16}

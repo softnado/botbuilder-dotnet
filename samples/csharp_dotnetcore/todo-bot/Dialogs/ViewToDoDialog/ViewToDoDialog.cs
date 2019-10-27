@@ -1,42 +1,46 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Builder.Dialogs.Adaptive;
-using Microsoft.Bot.Builder.Dialogs.Adaptive.Actions;
-using Microsoft.Bot.Builder.Dialogs.Adaptive.Generators;
-using Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions;
-using Microsoft.Bot.Builder.LanguageGeneration;
-
-namespace Microsoft.BotBuilderSamples
+﻿namespace Microsoft.BotBuilderSamples
 {
+    using System.Collections.Generic;
+    using System.IO;
+    using Microsoft.Bot.Builder.Dialogs;
+    using Microsoft.Bot.Builder.Dialogs.Adaptive;
+    using Microsoft.Bot.Builder.Dialogs.Adaptive.Actions;
+    using Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions;
+    using Microsoft.Bot.Builder.Dialogs.Adaptive.Generators;
+    using Microsoft.Bot.Builder.LanguageGeneration;
+
     public class ViewToDoDialog : ComponentDialog
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewToDoDialog"/> class.
+        /// </summary>
         public ViewToDoDialog()
             : base(nameof(ViewToDoDialog))
         {
             string[] paths = { ".", "Dialogs", "ViewToDoDialog", "ViewToDoDialog.lg" };
             string fullPath = Path.Combine(paths);
-            // Create instance of adaptive dialog. 
+
+            // Create instance of adaptive dialog.
             var ViewToDoDialog = new AdaptiveDialog(nameof(AdaptiveDialog))
             {
                 Generator = new TemplateEngineLanguageGenerator(new TemplateEngine().AddFile(fullPath)),
                 Triggers = new List<OnCondition>()
                 {
-                    new OnBeginDialog() 
+                    new OnBeginDialog()
                     {
-                        Actions = new List<Dialog>() 
+                        Actions = new List<Dialog>()
                         {
                             new SendActivity("@{View-ToDos()}")
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
 
             // Add named dialogs to the DialogSet. These names are saved in the dialog state.
-            AddDialog(ViewToDoDialog);
+            this.AddDialog(ViewToDoDialog);
 
             // The initial child Dialog to run.
-            InitialDialogId = nameof(AdaptiveDialog);
+            this.InitialDialogId = nameof(AdaptiveDialog);
         }
     }
 }

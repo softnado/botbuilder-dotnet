@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Bot.Builder;
-using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Schema;
-using Microsoft.Extensions.Logging;
-
 namespace Microsoft.BotBuilderSamples
 {
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Microsoft.Bot.Builder;
+    using Microsoft.Bot.Builder.Dialogs;
+    using Microsoft.Bot.Schema;
+    using Microsoft.Extensions.Logging;
+
     // This IBot implementation can run any type of Dialog. The use of type parameterization is to allows multiple different bots
     // to be run at different endpoints within the same project. This can be achieved by defining distinct Controller types
     // each with dependency on distinct IBot types, this way ASP Dependency Injection can glue everything together without ambiguity.
@@ -23,19 +23,26 @@ namespace Microsoft.BotBuilderSamples
         protected readonly BotState UserState;
         private DialogManager DialogManager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DialogBot{T}"/> class.
+        /// </summary>
+        /// <param name="conversationState"></param>
+        /// <param name="userState"></param>
+        /// <param name="dialog"></param>
+        /// <param name="logger"></param>
         public DialogBot(ConversationState conversationState, UserState userState, T dialog, ILogger<DialogBot<T>> logger)
         {
-            ConversationState = conversationState;
-            UserState = userState;
-            Dialog = dialog;
-            Logger = logger;
-            DialogManager = new DialogManager(Dialog);
+            this.ConversationState = conversationState;
+            this.UserState = userState;
+            this.Dialog = dialog;
+            this.Logger = logger;
+            this.DialogManager = new DialogManager(this.Dialog);
         }
 
         public override async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
         {
-            Logger.LogInformation("Running dialog with Activity.");
-            await DialogManager.OnTurnAsync(turnContext, cancellationToken: cancellationToken).ConfigureAwait(false);
+            this.Logger.LogInformation("Running dialog with Activity.");
+            await this.DialogManager.OnTurnAsync(turnContext, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }
