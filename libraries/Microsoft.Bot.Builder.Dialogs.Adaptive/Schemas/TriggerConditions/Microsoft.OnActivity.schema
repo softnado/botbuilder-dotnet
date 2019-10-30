@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/microsoft/botbuilder-dotnet/master/schemas/component.schema",
     "$role": "unionType(Microsoft.ITriggerCondition)",
     "title": "On activity",
-    "description": "Actions to perform on receipt of a generic activity.",
+    "description": "Actions to perform for when Event is received.",
     "type": "object",
     "allOf": [
         {
@@ -13,7 +13,7 @@
                 "type": {
                     "type": "string",
                     "title": "Activity type",
-                    "description": "The Activity.Type to match"
+                    "description": "Activity type: Event"
                 }
             }
         }
