@@ -527,12 +527,12 @@ namespace Microsoft.Bot.Builder
         {
             if (turnContext.Activity.Conversation == null)
             {
-                throw new ArgumentNullException("BotFrameworkAdapter.deleteConversationMember(): missing conversation");
+                throw new ArgumentNullException("BotFrameworkAdapter.DeleteConversationMember(): missing conversation");
             }
 
             if (string.IsNullOrWhiteSpace(turnContext.Activity.Conversation.Id))
             {
-                throw new ArgumentNullException("BotFrameworkAdapter.deleteConversationMember(): missing conversation.id");
+                throw new ArgumentNullException("BotFrameworkAdapter.DeleteConversationMember(): missing conversation.id");
             }
 
             var connectorClient = turnContext.TurnState.Get<IConnectorClient>();
@@ -585,12 +585,12 @@ namespace Microsoft.Bot.Builder
         {
             if (turnContext.Activity.Conversation == null)
             {
-                throw new ArgumentNullException("BotFrameworkAdapter.GetActivityMembers(): missing conversation");
+                throw new ArgumentNullException("BotFrameworkAdapter.GetConversationMembers(): missing conversation");
             }
 
             if (string.IsNullOrWhiteSpace(turnContext.Activity.Conversation.Id))
             {
-                throw new ArgumentNullException("BotFrameworkAdapter.GetActivityMembers(): missing conversation.id");
+                throw new ArgumentNullException("BotFrameworkAdapter.GetConversationMembers(): missing conversation.id");
             }
 
             var connectorClient = turnContext.TurnState.Get<IConnectorClient>();
@@ -847,7 +847,7 @@ namespace Microsoft.Bot.Builder
 
             if (resourceUrls == null)
             {
-                throw new ArgumentNullException(nameof(userId));
+                throw new ArgumentNullException(nameof(resourceUrls));
             }
 
             if (string.IsNullOrWhiteSpace(userId))
