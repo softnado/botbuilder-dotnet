@@ -195,6 +195,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DialogChildBot", "prototype
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DialogRootBot", "prototypes\DialogToDialog\DialogRootBot\DialogRootBot.csproj", "{7BBF84BE-49B4-48C3-ADF8-6CD63A9699FB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03. AlexaAdapterBotToBot", "03. AlexaAdapterBotToBot", "{32768C1B-1A5C-46DA-938E-852A49214B62}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleRootBot", "prototypes\AlexaAdapterBotToBot\SimpleRootBot\SimpleRootBot.csproj", "{8C7B5A54-61CC-4AE5-AAC7-1863372E1636}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleChildBot", "prototypes\AlexaAdapterBotToBot\SimpleChildBot\SimpleChildBot.csproj", "{C33A460F-8267-4DFE-A28A-F9B9F22AD9C6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bot.Builder.Community.Adapters.Alexa", "prototypes\AlexaAdapterBotToBot\Bot.Builder.Community.Adapters.Alexa\Bot.Builder.Community.Adapters.Alexa.csproj", "{FBD99333-93A7-4053-84E0-B4E773BCA435}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug - NuGet Packages|Any CPU = Debug - NuGet Packages|Any CPU
@@ -876,6 +884,36 @@ Global
 		{7BBF84BE-49B4-48C3-ADF8-6CD63A9699FB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7BBF84BE-49B4-48C3-ADF8-6CD63A9699FB}.Release-Windows|Any CPU.ActiveCfg = Release|Any CPU
 		{7BBF84BE-49B4-48C3-ADF8-6CD63A9699FB}.Release-Windows|Any CPU.Build.0 = Release|Any CPU
+		{8C7B5A54-61CC-4AE5-AAC7-1863372E1636}.Debug - NuGet Packages|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C7B5A54-61CC-4AE5-AAC7-1863372E1636}.Debug - NuGet Packages|Any CPU.Build.0 = Debug|Any CPU
+		{8C7B5A54-61CC-4AE5-AAC7-1863372E1636}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C7B5A54-61CC-4AE5-AAC7-1863372E1636}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C7B5A54-61CC-4AE5-AAC7-1863372E1636}.Debug-Windows|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C7B5A54-61CC-4AE5-AAC7-1863372E1636}.Debug-Windows|Any CPU.Build.0 = Debug|Any CPU
+		{8C7B5A54-61CC-4AE5-AAC7-1863372E1636}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C7B5A54-61CC-4AE5-AAC7-1863372E1636}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C7B5A54-61CC-4AE5-AAC7-1863372E1636}.Release-Windows|Any CPU.ActiveCfg = Release|Any CPU
+		{8C7B5A54-61CC-4AE5-AAC7-1863372E1636}.Release-Windows|Any CPU.Build.0 = Release|Any CPU
+		{C33A460F-8267-4DFE-A28A-F9B9F22AD9C6}.Debug - NuGet Packages|Any CPU.ActiveCfg = Debug|Any CPU
+		{C33A460F-8267-4DFE-A28A-F9B9F22AD9C6}.Debug - NuGet Packages|Any CPU.Build.0 = Debug|Any CPU
+		{C33A460F-8267-4DFE-A28A-F9B9F22AD9C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C33A460F-8267-4DFE-A28A-F9B9F22AD9C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C33A460F-8267-4DFE-A28A-F9B9F22AD9C6}.Debug-Windows|Any CPU.ActiveCfg = Debug|Any CPU
+		{C33A460F-8267-4DFE-A28A-F9B9F22AD9C6}.Debug-Windows|Any CPU.Build.0 = Debug|Any CPU
+		{C33A460F-8267-4DFE-A28A-F9B9F22AD9C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C33A460F-8267-4DFE-A28A-F9B9F22AD9C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C33A460F-8267-4DFE-A28A-F9B9F22AD9C6}.Release-Windows|Any CPU.ActiveCfg = Release|Any CPU
+		{C33A460F-8267-4DFE-A28A-F9B9F22AD9C6}.Release-Windows|Any CPU.Build.0 = Release|Any CPU
+		{FBD99333-93A7-4053-84E0-B4E773BCA435}.Debug - NuGet Packages|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBD99333-93A7-4053-84E0-B4E773BCA435}.Debug - NuGet Packages|Any CPU.Build.0 = Debug|Any CPU
+		{FBD99333-93A7-4053-84E0-B4E773BCA435}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBD99333-93A7-4053-84E0-B4E773BCA435}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBD99333-93A7-4053-84E0-B4E773BCA435}.Debug-Windows|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBD99333-93A7-4053-84E0-B4E773BCA435}.Debug-Windows|Any CPU.Build.0 = Debug|Any CPU
+		{FBD99333-93A7-4053-84E0-B4E773BCA435}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBD99333-93A7-4053-84E0-B4E773BCA435}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBD99333-93A7-4053-84E0-B4E773BCA435}.Release-Windows|Any CPU.ActiveCfg = Release|Any CPU
+		{FBD99333-93A7-4053-84E0-B4E773BCA435}.Release-Windows|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -956,6 +994,10 @@ Global
 		{B7593F46-7A09-4E1E-AE6B-BF2F61CC41C4} = {4A66AE84-3968-4BD1-BF83-9DD839A5AD49}
 		{40DA9C76-979E-45AF-827B-3F3ACEF29F89} = {4A66AE84-3968-4BD1-BF83-9DD839A5AD49}
 		{7BBF84BE-49B4-48C3-ADF8-6CD63A9699FB} = {4A66AE84-3968-4BD1-BF83-9DD839A5AD49}
+		{32768C1B-1A5C-46DA-938E-852A49214B62} = {41ED27B0-1D25-41C1-A1E4-AA2814F4F224}
+		{8C7B5A54-61CC-4AE5-AAC7-1863372E1636} = {32768C1B-1A5C-46DA-938E-852A49214B62}
+		{C33A460F-8267-4DFE-A28A-F9B9F22AD9C6} = {32768C1B-1A5C-46DA-938E-852A49214B62}
+		{FBD99333-93A7-4053-84E0-B4E773BCA435} = {32768C1B-1A5C-46DA-938E-852A49214B62}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7173C9F3-A7F9-496E-9078-9156E35D6E16}

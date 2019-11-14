@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Adapter for v4 of the Bot Builder .NET SDK to allow for a bot to be used for Alexa skills.</Description>
+    <Authors>Bot Builder Community</Authors>
+    <Company>Bot Builder Community</Company>
+    <PackageLicenseUrl>https://github.com/BotBuilderCommunity/botbuilder-community-dotnet/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/BotBuilderCommunity/botbuilder-community-dotnet/</PackageProjectUrl>
+    <Version>1.0.0</Version>
+    <FileVersion>1.0.0</FileVersion>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Integration\AspNet.WebApi\**" />
+    <EmbeddedResource Remove="Integration\AspNet.WebApi\**" />
+    <None Remove="Integration\AspNet.WebApi\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+		<PackageReference Include="Microsoft.Bot.Builder" Version="4.5.1" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.1.1" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="2.1.1" />
+		<PackageReference Include="Microsoft.Net.Http.Headers" Version="2.1.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\libraries\integration\Microsoft.Bot.Builder.Integration.AspNet.Core\Microsoft.Bot.Builder.Integration.AspNet.Core.csproj" />
+    <ProjectReference Include="..\..\..\libraries\Microsoft.Bot.Builder\Microsoft.Bot.Builder.csproj" />
+  </ItemGroup>
+
+</Project>
