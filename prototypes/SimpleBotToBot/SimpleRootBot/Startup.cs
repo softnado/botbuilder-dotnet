@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using DialogRootBot.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,10 @@ namespace SimpleRootBot
 
             // Register Conversation state (used by the Dialog system itself).
             services.AddSingleton<ConversationState>();
+
+            // Register AuthConfiguration to enable custom claim validation.
+            services.AddSingleton<AuthenticationConfiguration>();
+            services.AddSingleton<ClaimsValidator, AllowedCallersClaimsValidator>();
 
             // Register the skills configuration class
             services.AddSingleton<SkillsConfiguration>();
