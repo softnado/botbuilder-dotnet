@@ -113,6 +113,7 @@ namespace Microsoft.Bot.Builder.Dialogs
             {
                 var segment = segments[i];
                 var nextSegment = segments[i + 1];
+
                 current = ResolveSegment(current, segment, nextSegment);
                 if (current == null)
                 {
@@ -368,6 +369,12 @@ namespace Microsoft.Bot.Builder.Dialogs
                 return value;
             }
 
+            if (obj is JValue jval)
+            {
+                // in order to make things like "this.value.Length" work, when "this.value" is a string.
+                return GetObjectProperty(jval.Value, property);
+            }
+
             var prop = obj.GetType().GetProperties().Where(p => p.Name.ToLower() == property.ToLower()).FirstOrDefault();
             if (prop != null)
             {
@@ -447,15 +454,16 @@ namespace Microsoft.Bot.Builder.Dialogs
                     val = null;
                 }
                 else if (value is string || value is byte || value is bool ||
-                        value is short || value is int || value is long ||
-                        value is ushort || value is uint || value is ulong ||
-                        value is decimal || value is float || value is double)
+                       value is DateTime || value is DateTimeOffset ||
+                       value is short || value is int || value is long ||
+                       value is ushort || value is uint || value is ulong ||
+                       value is decimal || value is float || value is double)
                 {
                     val = JValue.FromObject(value);
                 }
                 else
                 {
-                    val = (JToken)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(value, expressionCaseSettings));
+                    val = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(value, expressionCaseSettings));
                 }
             }
             else

@@ -17,8 +17,6 @@ namespace Microsoft.Bot.Builder.LanguageGeneration
 {
     public class Expander : LGFileParserBaseVisitor<List<string>>
     {
-        private readonly Regex expressionRecognizeRegex = new Regex(@"@?(?<!\\)\{.+?(?<!\\)\}", RegexOptions.Compiled);
-        private readonly Regex escapeSeperatorRegex = new Regex(@"(?<!\\)\|", RegexOptions.Compiled);
         private readonly ExpressionEngine expanderExpressionEngine;
         private readonly ExpressionEngine evaluatorExpressionEngine;
         private readonly Stack<EvaluationTarget> evaluationTargetStack = new Stack<EvaluationTarget>();
@@ -144,9 +142,11 @@ namespace Microsoft.Bot.Builder.LanguageGeneration
             var stb = context.structuredTemplateBody();
             var result = new JObject();
             var typeName = stb.structuredBodyNameLine().STRUCTURED_CONTENT().GetText().Trim();
-            result["$type"] = typeName;
-            var expandedResult = new List<JObject>();
-            expandedResult.Add(result);
+            result[Evaluator.LGType] = typeName;
+            var expandedResult = new List<JObject>
+            {
+                result
+            };
             var bodys = stb.structuredBodyContentLine().STRUCTURED_CONTENT();
             foreach (var body in bodys)
             {
@@ -164,7 +164,7 @@ namespace Microsoft.Bot.Builder.LanguageGeneration
                     var property = line.Substring(0, start).Trim().ToLower();
                     var originValue = line.Substring(start + 1).Trim();
 
-                    var valueArray = escapeSeperatorRegex.Split(originValue);
+                    var valueArray = Evaluator.EscapeSeperatorRegex.Split(originValue);
                     if (valueArray.Length == 1)
                     {
                         var id = Guid.NewGuid().ToString();
@@ -184,7 +184,7 @@ namespace Microsoft.Bot.Builder.LanguageGeneration
                         expandedResult.ForEach(x => x[property] = valueList);
                     }
                 }
-                else if (IsPureExpression(line))
+                else if (Evaluator.IsPureExpression(line))
                 {
                     // [MyStruct
                     // Text = foo
@@ -201,7 +201,7 @@ namespace Microsoft.Bot.Builder.LanguageGeneration
                             var tempRes = JObject.FromObject(res);
 
                             // Full reference to another structured template is limited to the structured template with same type 
-                            if (propertyObject["$type"] != null && propertyObject["$type"].ToString() == typeName)
+                            if (propertyObject[Evaluator.LGType] != null && propertyObject[Evaluator.LGType].ToString() == typeName)
                             {
                                 foreach (var item in propertyObject)
                                 {
@@ -225,7 +225,7 @@ namespace Microsoft.Bot.Builder.LanguageGeneration
             foreach (var idToString in idToStringDict)
             {
                 // convert id text or expression to list of evaluated values
-                if ((idToString.Value.StartsWith("@") || idToString.Value.EndsWith("{")) && idToString.Value.EndsWith("}"))
+                if (idToString.Value.StartsWith("@{") && idToString.Value.EndsWith("}"))
                 {
                     templateRefValues.Add(idToString.Key, this.EvalExpression(idToString.Value));
                 }
@@ -261,18 +261,14 @@ namespace Microsoft.Bot.Builder.LanguageGeneration
                 switch (node.Symbol.Type)
                 {
                     case LGFileParser.DASH:
+                    case LGFileParser.MULTILINE_PREFIX:
+                    case LGFileParser.MULTILINE_SUFFIX:
                         break;
                     case LGFileParser.ESCAPE_CHARACTER:
-                        result = StringListConcat(result, new List<string>() { Regex.Unescape(node.GetText()) });
+                        result = StringListConcat(result, EvalEscape(node.GetText()));
                         break;
                     case LGFileParser.EXPRESSION:
                         result = StringListConcat(result, EvalExpression(node.GetText()));
-                        break;
-                    case LGFileParser.TEMPLATE_REF:
-                        result = StringListConcat(result, EvalTemplateRef(node.GetText()));
-                        break;
-                    case LGFileLexer.MULTI_LINE_TEXT:
-                        result = StringListConcat(result, EvalMultiLineText(node.GetText()));
                         break;
                     default:
                         result = StringListConcat(result, new List<string>() { node.GetText() });
@@ -335,6 +331,20 @@ namespace Microsoft.Bot.Builder.LanguageGeneration
             }
         }
 
+        private List<string> EvalEscape(string exp)
+        {
+            var value = new List<string>();
+            var commonEscapes = new List<string>() { "\\r", "\\n", "\\t" };
+            if (commonEscapes.Contains(exp))
+            {
+                value.Add(Regex.Unescape(exp));
+            }
+
+            value.Add(exp.Substring(1));
+
+            return value;
+        }
+
         private List<string> EvalExpression(string exp)
         {
             exp = exp.TrimStart('@').TrimStart('{').TrimEnd('}');
@@ -359,66 +369,16 @@ namespace Microsoft.Bot.Builder.LanguageGeneration
             return new List<string>() { result.ToString() };
         }
 
-        private List<string> EvalTemplateRef(string exp)
-        {
-            exp = exp.TrimStart('[').TrimEnd(']').Trim();
-            if (exp.IndexOf('(') < 0)
-            {
-                if (TemplateMap.ContainsKey(exp))
-                {
-                    exp = exp + "(" + string.Join(",", TemplateMap[exp].Parameters) + ")";
-                }
-                else
-                {
-                    exp = exp + "()";
-                }
-            }
-
-            return EvalExpression(exp);
-        }
-
         // just don't want to write evaluationTargetStack.Peek() everywhere
         private EvaluationTarget CurrentTarget() => evaluationTargetStack.Peek();
 
-        private List<string> EvalMultiLineText(string exp)
-        {
-            // remove ``` ```
-            exp = exp.Substring(3, exp.Length - 6);
-            var templateRefValues = new Dictionary<string, List<string>>();
-            var matches = expressionRecognizeRegex.Matches(exp);
-            if (matches != null)
-            {
-                foreach (Match match in matches)
-                {
-                    templateRefValues.Add(match.Value, EvalExpression(match.Value));
-                }
-            }
-
-            var result = new List<string>() { exp };
-            foreach (var templateRefValue in templateRefValues)
-            {
-                var tempRes = new List<string>();
-                foreach (var res in result)
-                {
-                    foreach (var refValue in templateRefValue.Value)
-                    {
-                        tempRes.Add(res.Replace(templateRefValue.Key, refValue));
-                    }
-                }
-
-                result = tempRes;
-            }
-
-            return result;
-        }
-
         private (object value, string error) EvalByExpressionEngine(string exp, object scope)
         {
-            object value = null;
-            string error = null;
             var expanderExpression = this.expanderExpressionEngine.Parse(exp);
             var evaluatorExpression = this.evaluatorExpressionEngine.Parse(exp);
             var parse = ReconstructExpression(expanderExpression, evaluatorExpression);
+            string error;
+            object value;
             (value, error) = parse.TryEvaluate(scope);
 
             return (value, error);
@@ -524,7 +484,7 @@ namespace Microsoft.Bot.Builder.LanguageGeneration
         private List<string> EvalTextContainsExpression(string exp)
         {
             var templateRefValues = new Dictionary<string, List<string>>();
-            var matches = expressionRecognizeRegex.Matches(exp);
+            var matches = Evaluator.ExpressionRecognizeRegex.Matches(exp);
             if (matches != null)
             {
                 foreach (Match match in matches)
@@ -558,7 +518,7 @@ namespace Microsoft.Bot.Builder.LanguageGeneration
                 return new List<string>() { exp };
             }
 
-            if (IsPureExpression(exp))
+            if (Evaluator.IsPureExpression(exp))
             {
                 // @{} or {} text, get object result
                 return EvalExpression(exp);
@@ -567,18 +527,6 @@ namespace Microsoft.Bot.Builder.LanguageGeneration
             {
                 return EvalTextContainsExpression(exp).Select(x => Regex.Unescape(x)).ToList();
             }
-        }
-
-        private bool IsPureExpression(string exp)
-        {
-            if (string.IsNullOrWhiteSpace(exp))
-            {
-                return false;
-            }
-
-            exp = exp.Trim();
-            var expressions = expressionRecognizeRegex.Matches(exp);
-            return expressions.Count == 1 && expressions[0].Value == exp;
         }
     }
 }
