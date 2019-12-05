@@ -167,16 +167,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.TestProtocol", "tests\Microsoft.Bot.Builder.TestProtocol\Microsoft.Bot.Builder.TestProtocol.csproj", "{24CCB459-B4F6-484F-8BA4-946A4AB816FA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Prototypes", "Prototypes", "{4904817E-AF5C-4EEA-A221-40AD45F9EBC8}"
-	ProjectSection(SolutionItems) = preProject
-		prototypes\cc-skill-manifest-sample.json = prototypes\cc-skill-manifest-sample.json
-		prototypes\SampleComplexSkillManifest-Preview.json = prototypes\SampleComplexSkillManifest-Preview.json
-		prototypes\SampleEchoSkillManifest.json = prototypes\SampleEchoSkillManifest.json
-		prototypes\SampleInlineSkillManifest-Preview.json = prototypes\SampleInlineSkillManifest-Preview.json
-		prototypes\SampleSimpleSkillManifest.json = prototypes\SampleSimpleSkillManifest.json
-		prototypes\skill-manifest-schema-1-0-0.json = prototypes\skill-manifest-schema-1-0-0.json
-		prototypes\skill-manifest-schema-2-1-preview-0.json = prototypes\skill-manifest-schema-2-1-preview-0.json
-		prototypes\SkillManifestVA.json = prototypes\SkillManifestVA.json
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. SimpleBotToBot", "01. SimpleBotToBot", "{4F93053E-5352-401A-92AD-E538031A4856}"
 EndProject
