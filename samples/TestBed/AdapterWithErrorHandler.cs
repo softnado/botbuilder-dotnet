@@ -19,11 +19,10 @@ namespace Microsoft.BotBuilderSamples
         private TemplateEngine _templateEngine;
 
         public AdapterWithErrorHandler(ICredentialProvider credentialProvider, ILogger<BotFrameworkHttpAdapter> logger, IStorage storage, UserState userState, ConversationState conversationState, IConfiguration configuration)
-            : base(credentialProvider)
+            : base(credentialProvider, logger: logger)
         {
             this.UseStorage(storage);
             this.UseState(userState, conversationState);
-            this.Use(new RegisterClassMiddleware<IActivityGenerator>(new ActivityGenerator()));
 
             _templateEngine = new TemplateEngine().AddFile(Path.Combine(".", "AdapterWithErrorHandler.lg"));
 

@@ -32,17 +32,17 @@ namespace Microsoft.BotBuilderSamples
                         new IntentPattern()
                         {
                             Intent = "start",
-                            Pattern = "start"
+                            Pattern = "(?i)start"
                         },
                         new IntentPattern()
                         {
                             Intent = "cancel",
-                            Pattern = "cancel"
+                            Pattern = "(?i)cancel"
                         },
                         new IntentPattern()
                         {
                             Intent = "set_name",
-                            Pattern = "set name"
+                            Pattern = "(?i)set name"
                         }
                     }
                 },
@@ -65,7 +65,7 @@ namespace Microsoft.BotBuilderSamples
                             },
                             new SendActivity()
                             {
-                                Activity = new ActivityTemplate("\\[set name]I have {$userName} as your name")
+                                Activity = new ActivityTemplate("\\[set name]I have @{$userName} as your name")
                             }
                         }
                     },
@@ -74,21 +74,25 @@ namespace Microsoft.BotBuilderSamples
                         Intent = "start",
                         Actions = new List<Dialog>()
                         {
-                            new InitProperty() {
+                            new InitProperty()
+                            {
                                 Property = "turn.recognized.entities.foo",
                                 Type = "array"
                             },
-                            new EditArray() {
+                            new EditArray()
+                            {
                                 ItemsProperty = "turn.recognized.entities.foo",
                                 Value = "'test'",
                                 ChangeType = EditArray.ArrayChangeType.Push
                             },
-                            new SetProperty() {
-                                Property = "@bar",
+                            new SetProperty()
+                            {
+                                Property = "@@bar",
                                 Value = "coalesce(@foo, null)"
                             },
-                            new SendActivity() {
-                                Activity = new ActivityTemplate("I have {@bar}")
+                            new SendActivity()
+                            {
+                                Activity = new ActivityTemplate("I have @{@@bar}")
                             }
                         }
                     },
@@ -97,7 +101,7 @@ namespace Microsoft.BotBuilderSamples
                         Intent = "cancel",
                         Actions = new List<Dialog>()
                         {
-                            new SendActivity("{WelcomeUser()}")
+                            new SendActivity("@{WelcomeUser()}")
                         }
                     }
                 }
@@ -137,7 +141,7 @@ namespace Microsoft.BotBuilderSamples
                             Condition = "dialog.foreach.value.name != turn.activity.recipient.name",
                             Actions = new List<Dialog>()
                             {
-                                new SendActivity("[WelcomeUser]")
+                                new SendActivity("@{WelcomeUser()}")
                             }
                         }
                     }

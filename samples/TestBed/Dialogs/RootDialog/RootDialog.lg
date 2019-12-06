@@ -1,7 +1,7 @@
 ﻿# GreetingReply
 [Activity
     Text = Hi there! I'm a demo bot! Nice to meet you. 
-    SuggestedActions = {Suggestions(createArray('Get started', 'Cancel'))}
+    SuggestedActions = @{createArray('Get started', 'Cancel')}
 ]
 
 # GlobalHelp
@@ -16,24 +16,21 @@
 # WelcomeUser
 [Activity
     Text = Hello, I'm a demo bot.
-    SuggestedActions = {Suggestions(createArray('Start'))}
+    SuggestedActions = Start
 ]
 
-# Suggestions (params)
-- {join(params, ' | ')}
-
 # GreetUser
-- OK{RandName()}, let's start again. \[Rand\]
-- Ok{RandName()}, let's start over. \[Rand\]
+- OK @{RandName()}, let's start again. \[Rand\]
+- Ok @{RandName()}, let's start over. \[Rand\]
 - No problem, let's start again.
 - Done, let's start over.
-- Sure thing{RandName()}, we can start over. \[Rand\]
+- Sure thing @{RandName()}, we can start over. \[Rand\]
 
 # RandName 
-- IF: {user.name && rand(0, 1000) > 1}
-    - {concat(' ', CapitalizeFirstLetter(user.name))}
+- IF: @{user.name && rand(0, 1000) > 1}
+    - @{concat(' ', CapitalizeFirstLetter(user.name))}
 - ELSE:
     - 
 
 # CapitalizeFirstLetter(name) 
-- {concat(toUpper(substring(name, 0, 1)), substring(name, 1))}
+- @{concat(toUpper(substring(name, 0, 1)), substring(name, 1))}

@@ -15,7 +15,7 @@ namespace Microsoft.BotBuilderSamples
     public class TestBedHttpAdapter : BotFrameworkHttpAdapter
     {
         public TestBedHttpAdapter(ICredentialProvider credentialProvider, IConfiguration configuration, ILogger<BotFrameworkHttpAdapter> logger, IStorage storage, UserState userState, ConversationState conversationState, ResourceExplorer resourceExplorer)
-            : base(credentialProvider)
+            : base(credentialProvider, logger: logger)
         {
             this.Use(new RegisterClassMiddleware<IConfiguration>(configuration));
             this.UseStorage(storage);
