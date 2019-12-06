@@ -34,7 +34,7 @@ namespace SimpleRootBot
             services.AddSingleton<BotAdapter>(sp => sp.GetService<BotFrameworkHttpAdapter>());
 
             // Register the skills client and skills request handler.
-            services.AddSingleton<ISkillConversationIdFactory, SkillConversationIdFactory>();
+            services.AddSingleton<SkillConversationIdFactoryBase, SkillConversationIdFactory>();
             services.AddHttpClient<BotFrameworkHttpClient>();
             services.AddSingleton<ChannelServiceHandler, SkillHandler>();
 

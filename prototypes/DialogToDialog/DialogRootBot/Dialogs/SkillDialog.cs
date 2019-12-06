@@ -2,14 +2,13 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Builder.Integration.AspNet.Core.Skills;
-using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Configuration;
@@ -184,6 +183,11 @@ namespace DialogRootBot.Dialogs
             // (the dialog stack won't get updated with the skillDialog and 'things won't work if you don't)
             await _conversationState.SaveChangesAsync(dc.Context, true, cancellationToken);
             var response = await _skillClient.PostActivityAsync(_botId, _skillsConfig.Skills[skillId], _skillsConfig.SkillHostEndpoint, activity, cancellationToken);
+            if (response.Status != 200)
+            {
+                throw new HttpRequestException($"Error invoking the skill (status is {response.Status}). \r\n {response.Body}");
+            }
+
             return EndOfTurn;
         }
     }

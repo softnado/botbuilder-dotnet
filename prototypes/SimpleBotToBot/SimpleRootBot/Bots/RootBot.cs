@@ -17,12 +17,12 @@ namespace SimpleRootBot.Bots
     {
         private readonly IStatePropertyAccessor<string> _activeSkillProperty;
         private readonly string _botId;
-        private readonly ISkillConversationIdFactory _conversationIdFactory;
+        private readonly SkillConversationIdFactoryBase _conversationIdFactory;
         private readonly ConversationState _conversationState;
         private readonly BotFrameworkHttpClient _skillClient;
         private readonly SkillsConfiguration _skillsConfig;
 
-        public RootBot(ConversationState conversationState, SkillsConfiguration skillsConfig, ISkillConversationIdFactory conversationIdFactory, BotFrameworkHttpClient skillClient, IConfiguration configuration)
+        public RootBot(ConversationState conversationState, SkillsConfiguration skillsConfig, SkillConversationIdFactoryBase conversationIdFactory, BotFrameworkHttpClient skillClient, IConfiguration configuration)
         {
             _conversationIdFactory = conversationIdFactory;
             _botId = configuration.GetSection(MicrosoftAppCredentials.MicrosoftAppIdKey)?.Value;
