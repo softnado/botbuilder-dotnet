@@ -185,7 +185,7 @@ namespace DialogRootBot.Dialogs
             var response = await _skillClient.PostActivityAsync(_botId, _skillsConfig.Skills[skillId], _skillsConfig.SkillHostEndpoint, activity, cancellationToken);
             if (response.Status != 200)
             {
-                throw new HttpRequestException($"Error invoking the skill (status is {response.Status}). \r\n {response.Body}");
+                throw new HttpRequestException($"Error invoking the skill id: \"{skillId}\" at \"{_skillsConfig.Skills[skillId].SkillEndpoint}\" (status is {response.Status}). \r\n {response.Body}");
             }
 
             return EndOfTurn;
