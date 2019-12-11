@@ -8,37 +8,27 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace DialogRootBot.Bots
+namespace Microsoft.BotBuilderSamples.DialogRootBot.Bots
 {
-    // This IBot implementation can run any type of Dialog. The use of type parameterization is to allows multiple different bots
-    // to be run at different endpoints within the same project. This can be achieved by defining distinct Controller types
-    // each with dependency on distinct IBot types, this way ASP Dependency Injection can glue everything together without ambiguity.
-    // The ConversationState is used by the Dialog system. The UserState isn't, however, it might have been used in a Dialog implementation,
-    // and the requirement is that all BotState objects are saved at the end of a turn.
     public class RootBot<T> : ActivityHandler
         where T : Dialog
     {
         private readonly ConversationState _conversationState;
-        private readonly ILogger _logger;
         private readonly Dialog _mainDialog;
 
-        public RootBot(ConversationState conversationState, T mainDialog, ILogger<RootBot<T>> logger)
+        public RootBot(ConversationState conversationState, T mainDialog)
         {
             _conversationState = conversationState;
             _mainDialog = mainDialog;
-            _logger = logger;
         }
 
         public override async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default)
         {
-            turnContext.TurnState.Set(_conversationState);
-
-            // Run the Dialog the activity Activity.
             if (turnContext.Activity.Type != ActivityTypes.ConversationUpdate)
             {
+                // Run the Dialog with the Activity.
                 await _mainDialog.RunAsync(turnContext, _conversationState.CreateProperty<DialogState>("DialogState"), cancellationToken);
             }
             else
@@ -46,7 +36,7 @@ namespace DialogRootBot.Bots
                 await base.OnTurnAsync(turnContext, cancellationToken);
             }
 
-            // Save any state changes that might have occured during the turn.
+            // Save any state changes that might have occurred during the turn.
             await _conversationState.SaveChangesAsync(turnContext, false, cancellationToken);
         }
 
@@ -69,7 +59,7 @@ namespace DialogRootBot.Bots
         // Load attachment from embedded resource.
         private Attachment CreateAdaptiveCardAttachment()
         {
-            var cardResourcePath = "DialogRootBot.Cards.welcomeCard.json";
+            var cardResourcePath = "Microsoft.BotBuilderSamples.DialogRootBot.Cards.welcomeCard.json";
 
             using (var stream = GetType().Assembly.GetManifestResourceStream(cardResourcePath))
             {

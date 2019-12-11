@@ -7,13 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.BotFramework;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
-using Microsoft.Bot.Builder.Integration.AspNet.Core.Skills;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Connector.Authentication;
+using Microsoft.BotBuilderSamples.SimpleRootBot.Bots;
 using Microsoft.Extensions.DependencyInjection;
-using SimpleRootBot.Bots;
 
-namespace SimpleRootBot
+namespace Microsoft.BotBuilderSamples.SimpleRootBot
 {
     public class Startup
     {
@@ -25,11 +24,14 @@ namespace SimpleRootBot
             // Configure credentials
             services.AddSingleton<ICredentialProvider, ConfigurationCredentialProvider>();
 
+            // Register the skills configuration class
+            services.AddSingleton<SkillsConfiguration>();
+
             // Register AuthConfiguration to enable custom claim validation.
             services.AddSingleton<AuthenticationConfiguration>();
 
             // Register the Bot Framework Adapter with error handling enabled.
-            // Note some classes use the base BotAdapter so we add an extra registration that pulls the same instance.
+            // Note: some classes use the base BotAdapter so we add an extra registration that pulls the same instance.
             services.AddSingleton<BotFrameworkHttpAdapter, AdapterWithErrorHandler>();
             services.AddSingleton<BotAdapter>(sp => sp.GetService<BotFrameworkHttpAdapter>());
 
@@ -43,9 +45,6 @@ namespace SimpleRootBot
 
             // Register Conversation state (used by the Dialog system itself).
             services.AddSingleton<ConversationState>();
-
-            // Register the skills configuration class
-            services.AddSingleton<SkillsConfiguration>();
 
             // Register the bot as a transient. In this case the ASP Controller is expecting an IBot.
             services.AddTransient<IBot, RootBot>();

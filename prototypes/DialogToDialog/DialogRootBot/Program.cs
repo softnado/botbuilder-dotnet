@@ -5,7 +5,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace DialogRootBot
+namespace Microsoft.BotBuilderSamples.DialogRootBot
 {
     public class Program
     {

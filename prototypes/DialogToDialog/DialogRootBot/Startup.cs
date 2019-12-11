@@ -1,9 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using DialogRootBot.Authentication;
-using DialogRootBot.Bots;
-using DialogRootBot.Dialogs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +10,12 @@ using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Builder.Integration.AspNet.Core.Skills;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Connector.Authentication;
+using Microsoft.BotBuilderSamples.DialogRootBot.Authentication;
+using Microsoft.BotBuilderSamples.DialogRootBot.Bots;
+using Microsoft.BotBuilderSamples.DialogRootBot.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DialogRootBot
+namespace Microsoft.BotBuilderSamples.DialogRootBot
 {
     public class Startup
     {
@@ -24,18 +24,21 @@ namespace DialogRootBot
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            // Configure credentials
+            // Register credential provider
             services.AddSingleton<ICredentialProvider, ConfigurationCredentialProvider>();
 
+            // Register the skills configuration class
+            services.AddSingleton<SkillsConfiguration>();
+
             // Register AuthConfiguration to enable custom claim validation.
-            services.AddSingleton(provider => new AuthenticationConfiguration { ClaimsValidator = new AllowedCallersClaimsValidator() });
+            services.AddSingleton(sp => new AuthenticationConfiguration { ClaimsValidator = new AllowedCallersClaimsValidator(sp.GetService<SkillsConfiguration>()) });
 
             // Register the Bot Framework Adapter with error handling enabled.
-            // Note some classes use the base BotAdapter so we add an extra registration that pulls the same instance.
+            // Note: some classes use the base BotAdapter so we add an extra registration that pulls the same instance.
             services.AddSingleton<BotFrameworkHttpAdapter, AdapterWithErrorHandler>();
             services.AddSingleton<BotAdapter>(sp => sp.GetService<BotFrameworkHttpAdapter>());
 
-            // Register the skills client and skills request handler.
+            // Register the skills conversation ID factory, the client and the request handler.
             services.AddSingleton<SkillConversationIdFactoryBase, SkillConversationIdFactory>();
             services.AddHttpClient<SkillHttpClient>();
             services.AddSingleton<ChannelServiceHandler, SkillHandler>();
@@ -45,9 +48,6 @@ namespace DialogRootBot
 
             // Register Conversation state (used by the Dialog system itself).
             services.AddSingleton<ConversationState>();
-
-            // Register the skills configuration class
-            services.AddSingleton<SkillsConfiguration>();
 
             // Register the SkillDialog (remote skill).
             services.AddSingleton<SkillDialog>();
