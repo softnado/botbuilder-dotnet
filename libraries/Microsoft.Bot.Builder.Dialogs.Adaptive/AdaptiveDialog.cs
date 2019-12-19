@@ -917,17 +917,13 @@ namespace Microsoft.Bot.Builder.Dialogs.Adaptive
                                 var choice = choices.Find(p => p.Property == (info.Value as JArray)[0].ToObject<string>());
                                 if (choice != null)
                                 {
-                                    // Resolve and move to SetProperty
+                                    // Resolve and allow setproperty to pass through
                                     recognized.Add(info);
                                     infos.Clear();
                                     queues.ChooseProperty.Dequeue();
                                     choice.Expected = true;
                                     queues.SetProperty.Add(choice);
                                     context.GetState().SetValue(DialogPath.ExpectedProperties, expected.Concat(new string[] { choice.Property }).ToArray());
-
-                                    // TODO: This seems a little draconian, but we don't want property names to trigger help
-                                    context.GetState().SetValue(TurnPath.TOPINTENT, "None");
-                                    context.GetState().SetValue(TurnPath.TOPSCORE, 1.0);
                                 }
                             }
 
