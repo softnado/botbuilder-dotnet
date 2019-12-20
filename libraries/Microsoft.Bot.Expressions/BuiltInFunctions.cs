@@ -53,6 +53,11 @@ namespace Microsoft.Bot.Expressions
         private static readonly Dictionary<string, ExpressionEvaluator> _functions = BuildFunctionLookup();
 
         /// <summary>
+        /// Object used to lock Randomizer.
+        /// </summary>
+        private static readonly object _randomizerLock = new object();
+
+        /// <summary>
         /// Verify the result of an expression is of the appropriate type and return a string if not.
         /// </summary>
         /// <param name="value">Value to verify.</param>
@@ -982,7 +987,7 @@ namespace Microsoft.Bot.Expressions
             if (left == null)
             {
                 // fully converted to path, so we just delegate to memory scope
-                return state.GetValue(path);
+                return WrapGetValue(state, path);
             }
             else
             {
@@ -993,7 +998,7 @@ namespace Microsoft.Bot.Expressions
                     return (null, err);
                 }
 
-                return new SimpleObjectMemory(newScope).GetValue(path);
+                return WrapGetValue(new SimpleObjectMemory(newScope), path);
             }
         }
 
@@ -1011,11 +1016,21 @@ namespace Microsoft.Bot.Expressions
                 (property, error) = children[1].TryEvaluate(state);
                 if (error == null)
                 {
-                    (value, error) = new SimpleObjectMemory(instance).GetValue((string)property);
+                    (value, error) = WrapGetValue(new SimpleObjectMemory(instance), (string)property);
                 }
             }
 
             return (value, error);
+        }
+
+        private static (object value, string error) WrapGetValue(IMemory memory, string property)
+        {
+            if (memory.TryGetValue(property, out var result))
+            {
+                return (result, null);
+            }
+
+            return (null, $"Can not access {property}");
         }
 
         private static (object value, string error) ExtractElement(Expression expression, IMemory state)
@@ -1096,7 +1111,8 @@ namespace Microsoft.Bot.Expressions
                 return (null, err);
             }
 
-            return state.SetValue(path, value);
+            state.SetValue(path, value);
+            return (value, null);
         }
 
         private static string ParseStringOrNull(object value)
@@ -1341,8 +1357,6 @@ namespace Microsoft.Bot.Expressions
             (instance, error) = expression.Children[0].TryEvaluate(state);
             if (error == null)
             {
-                // 2nd parameter has been rewrite to $local.item
-                var iteratorName = (string)(expression.Children[1].Children[0] as Constant).Value;
                 IList list = null;
                 if (TryParseList(instance, out IList ilist))
                 {
@@ -1363,6 +1377,8 @@ namespace Microsoft.Bot.Expressions
 
                 if (error == null)
                 {
+                    var iteratorName = (string)(expression.Children[1].Children[0] as Constant).Value;
+                    var stackedMemory = StackedMemory.Wrap(state);
                     result = new List<object>();
                     for (var idx = 0; idx < list.Count; idx++)
                     {
@@ -1370,13 +1386,12 @@ namespace Microsoft.Bot.Expressions
                         {
                             { iteratorName, AccessIndex(list, idx).value },
                         };
-                        var newMemory = new Dictionary<string, IMemory>
-                        {
-                            { "$global", state },
-                            { "$local", new SimpleObjectMemory(local) },
-                        };
 
-                        (var r, var e) = expression.Children[2].TryEvaluate(new ComposedMemory(newMemory));
+                        // the local iterator is pushed as one memory layer in the memory stack
+                        stackedMemory.Push(SimpleObjectMemory.Wrap(local));
+                        (var r, var e) = expression.Children[2].TryEvaluate(stackedMemory);
+                        stackedMemory.Pop();
+                        
                         if (e != null)
                         {
                             return (null, e);
@@ -1399,8 +1414,6 @@ namespace Microsoft.Bot.Expressions
             (instance, error) = expression.Children[0].TryEvaluate(state);
             if (error == null)
             {
-                // 2nd parameter has been rewrite to $local.item
-                var iteratorName = (string)(expression.Children[1].Children[0] as Constant).Value;
                 var isInstanceList = false;
                 IList list = null;
                 if (TryParseList(instance, out IList ilist))
@@ -1423,6 +1436,8 @@ namespace Microsoft.Bot.Expressions
 
                 if (error == null)
                 {
+                    var iteratorName = (string)(expression.Children[1].Children[0] as Constant).Value;
+                    var stackedMemory = StackedMemory.Wrap(state);
                     result = new List<object>();
                     for (var idx = 0; idx < list.Count; idx++)
                     {
@@ -1430,12 +1445,11 @@ namespace Microsoft.Bot.Expressions
                         {
                             { iteratorName, AccessIndex(list, idx).value },
                         };
-                        var newMemory = new Dictionary<string, IMemory>
-                        {
-                            { "$global", state },
-                            { "$local", new SimpleObjectMemory(local) },
-                        };
-                        (var r, _) = expression.Children[2].TryEvaluate(new ComposedMemory(newMemory));
+
+                        // the local iterator is pushed as one memory layer in the memory stack
+                        stackedMemory.Push(SimpleObjectMemory.Wrap(local));
+                        (var r, _) = expression.Children[2].TryEvaluate(stackedMemory);
+                        stackedMemory.Pop();
 
                         if ((bool)r)
                         {
@@ -1487,12 +1501,6 @@ namespace Microsoft.Bot.Expressions
             {
                 throw new Exception($"Second parameter of foreach is not an identifier : {second}");
             }
-
-            var iteratorName = second.ToString();
-
-            // rewrite the 2nd, 3rd paramater
-            expression.Children[1] = RewriteAccessor(expression.Children[1], iteratorName);
-            expression.Children[2] = RewriteAccessor(expression.Children[2], iteratorName);
         }
 
         private static void ValidateIsMatch(Expression expression)
@@ -1503,44 +1511,6 @@ namespace Microsoft.Bot.Expressions
             if (second.ReturnType == ReturnType.String && second.Type == ExpressionType.Constant)
             {
                 CommonRegex.CreateRegex((second as Constant).Value.ToString());
-            }
-        }
-
-        private static Expression RewriteAccessor(Expression expression, string localVarName)
-        {
-            if (expression.Type == ExpressionType.Accessor)
-            {
-                if (expression.Children.Count() == 2)
-                {
-                    expression.Children[1] = RewriteAccessor(expression.Children[1], localVarName);
-                }
-                else
-                {
-                    var str = expression.ToString();
-                    var prefix = "$global";
-                    if (str == localVarName || str.StartsWith(localVarName + "."))
-                    {
-                        prefix = "$local";
-                    }
-
-                    expression.Children = new Expression[]
-                    {
-                        expression.Children[0],
-                        Expression.MakeExpression(ExpressionType.Accessor, new Constant(prefix)),
-                    };
-                }
-
-                return expression;
-            }
-            else
-            {
-                // rewite children if have any
-                for (var idx = 0; idx < expression.Children.Count(); idx++)
-                {
-                    expression.Children[idx] = RewriteAccessor(expression.Children[idx], localVarName);
-                }
-
-                return expression;
             }
         }
 
@@ -3449,7 +3419,10 @@ namespace Microsoft.Bot.Expressions
                             }
                             else
                             {
-                                value = Randomizer.Next(min, max);
+                                lock (_randomizerLock)
+                                {
+                                    value = Randomizer.Next(min, max);
+                                }
                             }
 
                             return (value, error);
