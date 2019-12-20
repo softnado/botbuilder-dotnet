@@ -57,7 +57,7 @@ namespace Microsoft.Bot.Builder.Dialogs.Adaptive
         /// Recognizer for processing incoming user input.
         /// </value>
         [JsonProperty("recognizer")]
-        public IRecognizer Recognizer { get; set; }
+        public InputRecognizer Recognizer { get; set; }
 
         /// <summary>
         /// Gets or sets language Generator override.
@@ -233,7 +233,7 @@ namespace Microsoft.Bot.Builder.Dialogs.Adaptive
         public IEnumerable<Dialog> GetDependencies()
         {
             EnsureDependenciesInstalled();
-            
+
             yield break;
         }
 
@@ -511,58 +511,42 @@ namespace Microsoft.Bot.Builder.Dialogs.Adaptive
         protected async Task<RecognizerResult> OnRecognize(SequenceContext sequenceContext, CancellationToken cancellationToken = default)
         {
             var context = sequenceContext.Context;
-            var noneIntent = new RecognizerResult
+            if (Recognizer != null)
+            {
+                var result = await Recognizer.RecognizeAsync(sequenceContext, cancellationToken).ConfigureAwait(false);
+
+                if (result.Intents.Any())
+                {
+                    // just deal with topIntent
+                    IntentScore topScore = null;
+                    var topIntent = string.Empty;
+                    foreach (var intent in result.Intents)
+                    {
+                        if (topScore == null || topScore.Score < intent.Value.Score)
+                        {
+                            topIntent = intent.Key;
+                            topScore = intent.Value;
+                        }
+                    }
+
+                    result.Intents.Clear();
+                    result.Intents.Add(topIntent, topScore);
+                }
+                else
+                {
+                    result.Intents.Add("None", new IntentScore { Score = 0.0 });
+                }
+
+                return result;
+            }
+
+            // none intent if there is no recognizer
+            return new RecognizerResult
             {
                 Text = context.Activity.Text ?? string.Empty,
                 Intents = new Dictionary<string, IntentScore> { { "None", new IntentScore { Score = 0.0 } } },
                 Entities = JObject.Parse("{}")
             };
-            var text = context.Activity.Text;
-            if (context.Activity.Value != null)
-            {
-                var value = JObject.FromObject(context.Activity.Value);
-
-                // Check for submission of an adaptive card
-                if (string.IsNullOrEmpty(text) && value.Property("intent") != null)
-                {
-                    // Map submitted values to a recognizer result
-                    var recognized = new RecognizerResult { Text = string.Empty };
-
-                    foreach (var property in value.Properties())
-                    {
-                        if (property.Name.ToLower() == "intent")
-                        {
-                            recognized.Intents[property.Value.ToString()] = new IntentScore { Score = 1.0 };
-                        }
-                        else
-                        {
-                            if (recognized.Entities.Property(property.Name) == null)
-                            {
-                                recognized.Entities[property.Name] = new JArray(property.Value);
-                            }
-                            else
-                            {
-                                ((JArray)recognized.Entities[property.Name]).Add(property.Value);
-                            }
-                        }
-                    }
-
-                    return recognized;
-                }
-            }
-
-            if (Recognizer != null)
-            {
-                var result = await Recognizer.RecognizeAsync(context, cancellationToken).ConfigureAwait(false);
-
-                // only allow one intent
-                var topIntent = result.GetTopScoringIntent();
-                result.Intents.Clear();
-                result.Intents.Add(topIntent.intent, new IntentScore { Score = topIntent.score });
-                return result;
-            }
-
-            return noneIntent;
         }
 
         private string GetUniqueInstanceId(DialogContext dc)
