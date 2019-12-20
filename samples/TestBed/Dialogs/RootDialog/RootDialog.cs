@@ -7,6 +7,7 @@ using Microsoft.Bot.Builder.Dialogs.Adaptive.Actions;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Generators;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Input;
+using Microsoft.Bot.Builder.Dialogs.Adaptive.QnA.Recognizers;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Recognizers;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Templates;
 using Microsoft.Bot.Builder.LanguageGeneration;
@@ -25,83 +26,54 @@ namespace Microsoft.BotBuilderSamples
             var rootDialog = new AdaptiveDialog(nameof(AdaptiveDialog))
             {
                 Generator = new TemplateEngineLanguageGenerator(_templateEngine),
-                Recognizer = new RegexRecognizer()
-                {
-                    Intents = new List<IntentPattern>()
-                    {
-                        new IntentPattern()
-                        {
-                            Intent = "start",
-                            Pattern = "(?i)start"
-                        },
-                        new IntentPattern()
-                        {
-                            Intent = "cancel",
-                            Pattern = "(?i)cancel"
-                        },
-                        new IntentPattern()
-                        {
-                            Intent = "set_name",
-                            Pattern = "(?i)set name"
-                        }
-                    }
-                },
+                Recognizer = MultiRecognizer(),
                 Triggers = new List<OnCondition>()
                 {
                     new OnConversationUpdateActivity()
                     {
                         Actions = WelcomeUserAction()
                     },
-                    new OnIntent()
+                    new OnQnAMatch()
                     {
-                        Intent = "set_name",
                         Actions = new List<Dialog>()
                         {
-                            new TextInput()
-                            {
-                                Prompt = new ActivityTemplate("\\[set name]::What is your name?"),
-                                Property = "$userName",
-                                AlwaysPrompt = true
-                            },
                             new SendActivity()
                             {
-                                Activity = new ActivityTemplate("\\[set name]I have @{$userName} as your name")
+                                Activity = new ActivityTemplate("@{@answer}")
                             }
                         }
                     },
                     new OnIntent()
                     {
-                        Intent = "start",
+                        Intent = "Greeting",
                         Actions = new List<Dialog>()
                         {
-                            new InitProperty()
-                            {
-                                Property = "turn.recognized.entities.foo",
-                                Type = "array"
-                            },
-                            new EditArray()
-                            {
-                                ItemsProperty = "turn.recognized.entities.foo",
-                                Value = "'test'",
-                                ChangeType = EditArray.ArrayChangeType.Push
-                            },
-                            new SetProperty()
-                            {
-                                Property = "@@bar",
-                                Value = "coalesce(@foo, null)"
-                            },
-                            new SendActivity()
-                            {
-                                Activity = new ActivityTemplate("I have @{@@bar}")
-                            }
+                            new SendActivity("I'm greeting you. LUIS recognizer won!")
                         }
                     },
                     new OnIntent()
                     {
-                        Intent = "cancel",
+                        Intent = "UserProfile",
                         Actions = new List<Dialog>()
                         {
-                            new SendActivity("@{WelcomeUser()}")
+                            new SendActivity("Let's get your user profile. LUIS recognizer won!")
+                        }
+                    },
+                    new OnAmbigiousIntent()
+                    {
+                        Actions = new List<Dialog>()
+                        {
+                            new SendActivity("Ambiguous!"),
+                            new SendActivity("Top scoring intent: @{turn.recognized.intent} with score @{turn.recognized.Score}"),
+
+                            //new SendActivity("Top scoring answer: @{answer} with score @{turn.recognized.entities.$instance.answer[0]}")
+                        }
+                    },
+                    new OnUnknownIntent()
+                    {
+                        Actions = new List<Dialog>()
+                        {
+                            new SendActivity("I do not know how to do that!")
                         }
                     }
                 }
@@ -114,13 +86,18 @@ namespace Microsoft.BotBuilderSamples
             InitialDialogId = nameof(AdaptiveDialog);
         }
 
-        private static LuisApplication GetLUISApp()
+        private static InputRecognizer GetLUISApp()
         {
-            return new LuisApplication()
+            var luisapplication = new LuisApplication()
             {
-                ApplicationId = "822278ff-e172-4e87-931f-d8bd5f40163e",
+                ApplicationId = "063e7f98-fef5-4b60-a740-39a6d933dd09",
                 EndpointKey = "a95d07785b374f0a9d7d40700e28a285",
                 Endpoint = "https://westus.api.cognitive.microsoft.com"
+            };
+            var luisrecognizeroptions = new LuisRecognizerOptionsV2(luisapplication);
+            return new LuisRecognizer(luisrecognizeroptions)
+            {
+                Id = "Root_LUIS"
             };
         }
 
@@ -145,6 +122,30 @@ namespace Microsoft.BotBuilderSamples
                             }
                         }
                     }
+                }
+            };
+        }
+
+        private static InputRecognizer QnARecognizer()
+        {
+            return new QnAMakerRecognizer()
+            {
+                Id = "Root_QnA",
+                HostName = "'https://vk-test-qna.azurewebsites.net/qnamaker'",
+                EndpointKey = "'8e744f2e-2f80-4c16-bb68-7eb2a088726f'",
+                KnowledgeBaseId = "'206eab69-6573-4a8d-939b-63a1a2511d11'",
+                Top = 10
+            };
+        }
+
+        private static InputRecognizer MultiRecognizer()
+        {
+            return new CrossTrainedRecognizerSet()
+            {
+                Recognizers = new List<InputRecognizer>()
+                {
+                    QnARecognizer(),
+                    GetLUISApp()
                 }
             };
         }

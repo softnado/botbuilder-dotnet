@@ -1,0 +1,4 @@
+{
+    "$schema": "../sdk.schema",
+    "$kind": "Microsoft.QnA"
+}
