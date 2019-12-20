@@ -9,11 +9,11 @@ using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Microsoft.BotBuilderSamples.SimpleRootBot
+namespace Microsoft.BotBuilderSamples.DialogSkillBot
 {
-    public class AdapterWithErrorHandler : BotFrameworkHttpAdapter
+    public class SkillAdapterWithErrorHandler : BotFrameworkHttpAdapter
     {
-        public AdapterWithErrorHandler(IConfiguration configuration, ILogger<BotFrameworkHttpAdapter> logger, ConversationState conversationState = null)
+        public SkillAdapterWithErrorHandler(IConfiguration configuration, ILogger<SkillAdapterWithErrorHandler> logger, ConversationState conversationState = null)
             : base(configuration, logger)
         {
             OnTurnError = async (turnContext, exception) =>
@@ -22,7 +22,7 @@ namespace Microsoft.BotBuilderSamples.SimpleRootBot
                 logger.LogError(exception, $"[OnTurnError] unhandled error : {exception.Message}");
 
                 // Send a message to the user
-                var errorMessageText = "The bot encountered an error or bug.";
+                var errorMessageText = "The skill encountered an error or bug.";
                 var errorMessage = MessageFactory.Text(errorMessageText, errorMessageText, InputHints.IgnoringInput);
                 await turnContext.SendActivityAsync(errorMessage);
 
@@ -45,7 +45,15 @@ namespace Microsoft.BotBuilderSamples.SimpleRootBot
                     }
                 }
 
+                // Send and EndOfConversation activity to the skill caller with the error to end the conversation
+                // and let the caller decide what to do.
+                var endOfConversation = Activity.CreateEndOfConversationActivity();
+                endOfConversation.Code = "SkillError";
+                endOfConversation.Text = exception.Message;
+                await turnContext.SendActivityAsync(endOfConversation);
+
                 // Send a trace activity, which will be displayed in the Bot Framework Emulator
+                // Note: we return the entire exception in the value property to help the developer, this should not be done in prod.
                 await turnContext.TraceActivityAsync("OnTurnError Trace", exception.ToString(), "https://www.botframework.com/schemas/error", "TurnError");
             };
         }
