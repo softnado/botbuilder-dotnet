@@ -8,7 +8,7 @@ using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Schema;
 
-namespace Microsoft.BotBuilderSamples.SimpleRootBot31.Controllers
+namespace Microsoft.BotBuilderSamples.DialogRootBot31.Controllers
 {
     /// <summary>
     /// A controller that handles skill replies to the bot.
@@ -29,13 +29,13 @@ namespace Microsoft.BotBuilderSamples.SimpleRootBot31.Controllers
         public override async Task<IActionResult> SendToConversationAsync(string conversationId, [FromBody] Activity activity)
         {
             var result = await _handler.HandleSendToConversationAsync(HttpContext.Request.Headers["Authorization"], conversationId, activity).ConfigureAwait(false);
-            return new JsonResult(result, HttpHelper.BotMessageSerializerSettings);
+            return new JsonResult(result);
         }
 
         public override async Task<IActionResult> ReplyToActivityAsync(string conversationId, string activityId, [FromBody] Activity activity)
         {
             var result = await _handler.HandleReplyToActivityAsync(HttpContext.Request.Headers["Authorization"], conversationId, activityId, activity).ConfigureAwait(false);
-            return new JsonResult(result, HttpHelper.BotMessageSerializerSettings);
+            return new JsonResult(result);
         }
     }
 }

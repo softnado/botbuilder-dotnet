@@ -9,14 +9,14 @@ using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Builder.Integration.AspNet.Core.Skills;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Connector.Authentication;
-using Microsoft.BotBuilderSamples.SimpleRootBot31.Authentication;
-using Microsoft.BotBuilderSamples.SimpleRootBot31.Bots;
+using Microsoft.BotBuilderSamples.DialogRootBot31.Authentication;
+using Microsoft.BotBuilderSamples.DialogRootBot31.Bots;
+using Microsoft.BotBuilderSamples.DialogRootBot31.Dialogs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json.Serialization;
 
-namespace Microsoft.BotBuilderSamples.SimpleRootBot31
+namespace Microsoft.BotBuilderSamples.DialogRootBot31
 {
     public class Startup
     {
@@ -30,26 +30,33 @@ namespace Microsoft.BotBuilderSamples.SimpleRootBot31
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc()
+            services.AddControllers()
                 .AddNewtonsoftJson(options =>
-                    options.SerializerSettings.ContractResolver =
-                        new CamelCasePropertyNamesContractResolver());
+                {
+                    options.SerializerSettings.NullValueHandling = HttpHelper.BotMessageSerializerSettings.NullValueHandling;
+                    options.SerializerSettings.Formatting = HttpHelper.BotMessageSerializerSettings.Formatting;
+                    options.SerializerSettings.DateFormatHandling = HttpHelper.BotMessageSerializerSettings.DateFormatHandling;
+                    options.SerializerSettings.DateTimeZoneHandling = HttpHelper.BotMessageSerializerSettings.DateTimeZoneHandling;
+                    options.SerializerSettings.ReferenceLoopHandling = HttpHelper.BotMessageSerializerSettings.ReferenceLoopHandling;
+                    options.SerializerSettings.ContractResolver = HttpHelper.BotMessageSerializerSettings.ContractResolver;
+                    options.SerializerSettings.Converters = HttpHelper.BotMessageSerializerSettings.Converters;
+                });
 
-            // Configure credentials
+            // Register credential provider
             services.AddSingleton<ICredentialProvider, ConfigurationCredentialProvider>();
 
             // Register the skills configuration class
             services.AddSingleton<SkillsConfiguration>();
 
             // Register AuthConfiguration to enable custom claim validation.
-            services.AddSingleton(sp => new AuthenticationConfiguration { ClaimsValidator = new AllowedSkillsClaimsValidator(sp.GetService<SkillsConfiguration>()) });
+            services.AddSingleton(sp => new AuthenticationConfiguration { ClaimsValidator = new AllowedCallersClaimsValidator(sp.GetService<SkillsConfiguration>()) });
 
             // Register the Bot Framework Adapter with error handling enabled.
             // Note: some classes use the base BotAdapter so we add an extra registration that pulls the same instance.
             services.AddSingleton<BotFrameworkHttpAdapter, AdapterWithErrorHandler>();
             services.AddSingleton<BotAdapter>(sp => sp.GetService<BotFrameworkHttpAdapter>());
 
-            // Register the skills client and skills request handler.
+            // Register the skills conversation ID factory, the client and the request handler.
             services.AddSingleton<SkillConversationIdFactoryBase, SkillConversationIdFactory>();
             services.AddHttpClient<SkillHttpClient>();
             services.AddSingleton<ChannelServiceHandler, SkillHandler>();
@@ -60,8 +67,14 @@ namespace Microsoft.BotBuilderSamples.SimpleRootBot31
             // Register Conversation state (used by the Dialog system itself).
             services.AddSingleton<ConversationState>();
 
+            // Register the SkillDialog (remote skill).
+            services.AddSingleton<SkillDialog>();
+
+            // Register the MainDialog that will be run by the bot.
+            services.AddSingleton<MainDialog>();
+
             // Register the bot as a transient. In this case the ASP Controller is expecting an IBot.
-            services.AddTransient<IBot, RootBot>();
+            services.AddTransient<IBot, RootBot<MainDialog>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,6 +85,7 @@ namespace Microsoft.BotBuilderSamples.SimpleRootBot31
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             //app.UseHttpsRedirection(); Enable this to support https
