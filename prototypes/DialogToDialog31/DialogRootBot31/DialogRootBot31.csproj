@@ -5,6 +5,7 @@
     <LangVersion>latest</LangVersion>
     <AssemblyName>Microsoft.BotBuilderSamples.DialogRootBot31</AssemblyName>
     <RootNamespace>Microsoft.BotBuilderSamples.DialogRootBot31</RootNamespace>
+    <UserSecretsId>ac74b987-bbc8-43c9-b5ca-fd34b1b5492d</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

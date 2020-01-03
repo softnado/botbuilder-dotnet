@@ -31,16 +31,7 @@ namespace Microsoft.BotBuilderSamples.DialogRootBot31
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
-                .AddNewtonsoftJson(options =>
-                {
-                    options.SerializerSettings.NullValueHandling = HttpHelper.BotMessageSerializerSettings.NullValueHandling;
-                    options.SerializerSettings.Formatting = HttpHelper.BotMessageSerializerSettings.Formatting;
-                    options.SerializerSettings.DateFormatHandling = HttpHelper.BotMessageSerializerSettings.DateFormatHandling;
-                    options.SerializerSettings.DateTimeZoneHandling = HttpHelper.BotMessageSerializerSettings.DateTimeZoneHandling;
-                    options.SerializerSettings.ReferenceLoopHandling = HttpHelper.BotMessageSerializerSettings.ReferenceLoopHandling;
-                    options.SerializerSettings.ContractResolver = HttpHelper.BotMessageSerializerSettings.ContractResolver;
-                    options.SerializerSettings.Converters = HttpHelper.BotMessageSerializerSettings.Converters;
-                });
+                .AddNewtonsoftJson();
 
             // Register credential provider
             services.AddSingleton<ICredentialProvider, ConfigurationCredentialProvider>();

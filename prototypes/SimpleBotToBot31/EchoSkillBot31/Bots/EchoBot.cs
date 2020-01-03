@@ -22,7 +22,7 @@ namespace Microsoft.BotBuilderSamples.EchoSkillBot31.Bots
             }
             else
             {
-                await turnContext.SendActivityAsync(MessageFactory.Text($"Echo (dotnet) : {turnContext.Activity.Text}"), cancellationToken);
+                await turnContext.SendActivityAsync(MessageFactory.Text($"Echo (dotnet core 3.1) : {turnContext.Activity.Text}"), cancellationToken);
                 await turnContext.SendActivityAsync(MessageFactory.Text("Say \"end\" or \"stop\" and I'll end the conversation and back to the parent."), cancellationToken);
             }
         }

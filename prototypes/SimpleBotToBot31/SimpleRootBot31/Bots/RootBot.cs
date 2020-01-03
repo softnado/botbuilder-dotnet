@@ -115,7 +115,7 @@ namespace Microsoft.BotBuilderSamples.SimpleRootBot31.Bots
             {
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
-                    await turnContext.SendActivityAsync(MessageFactory.Text("Hello and welcome!"), cancellationToken);
+                    await turnContext.SendActivityAsync(MessageFactory.Text("Hello and welcome! (dotnet core 3.1)"), cancellationToken);
                 }
             }
         }

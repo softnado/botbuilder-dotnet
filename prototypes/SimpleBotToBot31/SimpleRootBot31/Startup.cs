@@ -30,10 +30,8 @@ namespace Microsoft.BotBuilderSamples.SimpleRootBot31
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc()
-                .AddNewtonsoftJson(options =>
-                    options.SerializerSettings.ContractResolver =
-                        new CamelCasePropertyNamesContractResolver());
+            services.AddControllers()
+                .AddNewtonsoftJson();
 
             // Configure credentials
             services.AddSingleton<ICredentialProvider, ConfigurationCredentialProvider>();
@@ -72,6 +70,7 @@ namespace Microsoft.BotBuilderSamples.SimpleRootBot31
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             //app.UseHttpsRedirection(); Enable this to support https
