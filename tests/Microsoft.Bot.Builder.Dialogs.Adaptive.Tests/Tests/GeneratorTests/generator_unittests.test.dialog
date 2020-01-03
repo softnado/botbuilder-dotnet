@@ -24,6 +24,30 @@
     },
     {
       "$kind": "Microsoft.Test.UserSays",
+      "text": "what's my current selection of personname"
+    },
+    {
+      "$kind": "Microsoft.Test.AssertReply",
+      "text": "personname=John Smith"
+    },
+    {
+      "$kind": "Microsoft.Test.AssertReply",
+      "text": "No help available.\r\nEnter a value for age"
+    },
+    {
+      "$kind": "Microsoft.Test.UserSays",
+      "text": "what's my current selection of age"
+    },
+    {
+      "$kind": "Microsoft.Test.AssertReply",
+      "text": "The value of age is empty."
+    },
+    {
+      "$kind": "Microsoft.Test.AssertReply",
+      "text": "No help available.\r\nEnter a value for age"
+    },
+    {
+      "$kind": "Microsoft.Test.UserSays",
       "text": "21 years old"
     },
     {
@@ -41,14 +65,6 @@
     {
       "$kind": "Microsoft.Test.UserSays",
       "text": "Seattle"
-    },
-    {
-      "$kind": "Microsoft.Test.AssertReply",
-      "text": "Enter a value for keyphraseproperty"
-    },
-    {
-      "$kind": "Microsoft.Test.UserSays",
-      "text": "Bot Framework"
     },
     {
       "$kind": "Microsoft.Test.AssertReply",
