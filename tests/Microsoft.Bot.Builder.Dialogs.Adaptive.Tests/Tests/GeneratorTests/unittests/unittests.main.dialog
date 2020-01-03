@@ -51,6 +51,7 @@
 "unittests-ChooseProperty",
 "unittests-HelpIntent",
 "unittests-NotUnderstood",
-"unittests-unittestsIntent" 
+"unittests-unittestsIntent",
+"unittests-ReadPropertyIntent" 
         ]
 }
