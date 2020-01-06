@@ -25,110 +25,81 @@ namespace Microsoft.BotBuilderSamples
         {
             var lgFile = Path.Combine(".", "Dialogs", "RootDialog", "RootDialog.lg");
             _templateEngine = new TemplateEngine().AddFile(lgFile);
-            var rootDialog = new AdaptiveDialog(nameof(AdaptiveDialog))
+            var rootDialog = new AdaptiveDialog()
             {
-                Generator = new TemplateEngineLanguageGenerator(_templateEngine),
-                Recognizer = MultiRecognizer(),
-                Triggers = new List<OnCondition>()
+                AutoEndDialog = false,
+                Recognizer = new RegexRecognizer()
                 {
-                    new OnConversationUpdateActivity()
+                    Intents = new List<IntentPattern>()
                     {
-                        Actions = WelcomeUserAction()
-                    },
-                    new OnQnAMatch()
-                    {
-                        Actions = new List<Dialog>()
+                        new IntentPattern()
                         {
-                            new SendActivity()
-                            {
-                                Activity = new ActivityTemplate("Here's what I have from QnA Maker - @{@answer}"),
-                            }
+                            Intent = "none",
+                            Pattern = "none"
                         }
-                    },
-                    new OnQnAMatch()
+                    }
+                },
+                Triggers = new List<OnCondition>() 
+                {
+                    new OnBeginDialog() 
                     {
-                        Condition = "count(turn.recognized.answers[0].context.prompts) > 0",
-                        Actions = new List<Dialog>()
+                        Actions = new List<Dialog>() 
                         {
-                            new SetProperty()
-                            {
-                                Property = "dialog.qna.multiTurn.context",
-                                Value = "turn.recognized.answers[0].context.prompts"
-                            },
                             new TextInput()
                             {
-                                Prompt = new ActivityTemplate("@{ShowMultiTurnAnswer()}"),
-                                Property = "turn.qnaMultiTurnResponse",
-                                AllowInterruptions = "false",
+                                Prompt = new ActivityTemplate("What is your name"),
+                                Property = "user.name"
                             },
-                            new SetProperty()
+                            new SendActivity("my name is @{user.name}")
+                        }
+                    },
+                    new OnIntent()
+                    {
+                        Intent = "none",
+                        Actions = new List<Dialog>()
+                        {
+                            new BeginDialog()
                             {
-                                Property = "turn.qnaMatchFromContext",
-                                Value = "where(dialog.qna.multiTurn.context, item, item.displayText == turn.qnaMultiTurnResponse)"
-                            },
-                            new IfCondition()
-                            {
-                                Condition = "turn.qnaMatchFromContext && count(turn.qnaMatchFromContext) > 0",
-                                Actions = new List<Dialog>()
+                                IncludeActivity = true,
+                                Dialog = new AdaptiveDialog()
                                 {
-                                    new SetProperty()
+                                    AutoEndDialog = false,
+                                    Recognizer = new RegexRecognizer()
                                     {
-                                        Property = "turn.qnaId",
-                                        Value = "turn.qnaMatchFromContext[0].qnaId"
+                                        Intents = new List<IntentPattern>()
+                                        {
+                                            new IntentPattern()
+                                            {
+                                                Intent = "none",
+                                                Pattern = "none"
+                                            }
+                                        }
+                                    },
+                                    Triggers = new List<OnCondition>()
+                                    {
+                                        new OnIntent()
+                                        {
+                                            Intent = "none",
+                                            Actions = new List<Dialog>()
+                                            {
+                                                new SendActivity("you are in sub-dialog's none intent")
+                                            }
+                                        },
+                                        new OnBeginDialog()
+                                        {
+                                            Actions = new List<Dialog>()
+                                            {
+                                                new SendActivity("you are in sub-dialog's on begin dialog")
+                                            }
+                                        }
                                     }
                                 }
-                            },
-                            new EmitEvent()
-                            {
-                                EventName = AdaptiveEvents.ActivityReceived,
-                                EventValue = "turn.activity",
-                                BubbleEvent = true
                             }
-                        }
-                    },
-                    new OnIntent()
-                    {
-                        Intent = "Greeting",
-                        Actions = new List<Dialog>()
-                        {
-                            new SendActivity("I'm greeting you. LUIS recognizer won!")
-                        }
-                    },
-                    new OnIntent()
-                    {
-                        Intent = "UserProfile",
-                        Actions = new List<Dialog>()
-                        {
-                            new SendActivity("Let's get your user profile. LUIS recognizer won!")
-                        }
-                    },
-                    new OnChooseIntent()
-                    {
-                        // This is nice so you can handle different ambiguous intents via different triggers
-                        Intents = new List<string>()
-                        {
-                            "QnAMatch",
-                            "Help"
-                        },
-                        Actions = new List<Dialog>()
-                        {
-                            new SendActivity("Ambiguous! QnA and Help intent!"),
-                            new SendActivity("[@{turn.recognized.intents.chooseIntent.QnAMatch.intents.QnAMatch.score}] Answer from KB: @{turn.recognized.intents.chooseIntent.QnAMatch.entities.answer[0]}"),
-                            new SendActivity("[@{turn.recognized.intents.chooseIntent.Help.intents.Help.score}] LUIS intent: Help (there is no way to dynamically get this from recognizer result and needs to be hard coded)")
-                            
-                            //new SendActivity("@{renderDisambiguationChoices(turn.recognized.intents.ChooseIntent)}")
-                        }
-                    },
-                    new OnUnknownIntent()
-                    {
-                        Actions = new List<Dialog>()
-                        {
-                            new SendActivity("I do not know how to do that!")
                         }
                     }
                 }
             };
-
+ 
             // Add named dialogs to the DialogSet. These names are saved in the dialog state.
             AddDialog(rootDialog);
 
