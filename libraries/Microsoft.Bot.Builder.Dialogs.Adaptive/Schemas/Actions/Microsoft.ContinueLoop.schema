@@ -4,13 +4,20 @@
     "title": "Continune Loop",
     "description": "Stop executing this template and continue with the next iteration of the loop.",
     "type": "object",
-    "required": [
-    ],
+    "required": [],
     "properties": {
         "id": {
             "type": "string",
             "title": "Id",
             "description": "Optional id for the dialog"
+        },
+        "disabled": {
+            "$role": "expression",
+            "title": "Disabled",
+            "description": "Optional condition which if true will disable this action.",
+            "examples": [
+                "user.age > 3"
+            ]
         }
     }
 }
