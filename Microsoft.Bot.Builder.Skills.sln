@@ -144,33 +144,33 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.Adapt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.TestProtocol", "tests\Microsoft.Bot.Builder.TestProtocol\Microsoft.Bot.Builder.TestProtocol.csproj", "{24CCB459-B4F6-484F-8BA4-946A4AB816FA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Prototypes", "Prototypes", "{4904817E-AF5C-4EEA-A221-40AD45F9EBC8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Skills", "Skills", "{4904817E-AF5C-4EEA-A221-40AD45F9EBC8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. SimpleBotToBot", "01. SimpleBotToBot", "{4F93053E-5352-401A-92AD-E538031A4856}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleRootBot", "prototypes\SimpleBotToBot\SimpleRootBot\SimpleRootBot.csproj", "{206AF777-3A80-47D2-B82C-40CDFA0627C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleRootBot", "tests\Skills\SimpleBotToBot\SimpleRootBot\SimpleRootBot.csproj", "{206AF777-3A80-47D2-B82C-40CDFA0627C6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02. DialogToDialog", "02. DialogToDialog", "{9B469D5B-441B-45A5-93AD-191FB3D7F3DE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DialogRootBot", "prototypes\DialogToDialog\DialogRootBot\DialogRootBot.csproj", "{88FAAEC9-9EE1-47A5-9477-65D59481F902}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DialogRootBot", "tests\Skills\DialogToDialog\DialogRootBot\DialogRootBot.csproj", "{88FAAEC9-9EE1-47A5-9477-65D59481F902}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticationBot", "prototypes\DialogToDialog\AuthenticationBot\AuthenticationBot.csproj", "{49C5AEEB-CE46-452D-AA93-F2E8029A1D55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticationBot", "tests\Skills\DialogToDialog\AuthenticationBot\AuthenticationBot.csproj", "{49C5AEEB-CE46-452D-AA93-F2E8029A1D55}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DialogSkillBot", "prototypes\DialogToDialog\DialogSkillBot\DialogSkillBot.csproj", "{1CB66452-A90A-4096-B619-48D01E6AAB52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DialogSkillBot", "tests\Skills\DialogToDialog\DialogSkillBot\DialogSkillBot.csproj", "{1CB66452-A90A-4096-B619-48D01E6AAB52}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EchoSkillBot", "prototypes\SimpleBotToBot\EchoSkillBot\EchoSkillBot.csproj", "{31954736-913C-439B-AD27-37709434DA99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EchoSkillBot", "tests\Skills\SimpleBotToBot\EchoSkillBot\EchoSkillBot.csproj", "{31954736-913C-439B-AD27-37709434DA99}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10. SimpleBotToBot31", "10. SimpleBotToBot31", "{D47DD5F8-D3BE-43ED-A7FC-C2AB33745529}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleRootBot31", "prototypes\SimpleBotToBot31\SimpleRootBot31\SimpleRootBot31.csproj", "{A27820BF-1E2B-4D27-9AE1-8A047B92D164}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleRootBot31", "tests\Skills\SimpleBotToBot31\SimpleRootBot31\SimpleRootBot31.csproj", "{A27820BF-1E2B-4D27-9AE1-8A047B92D164}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EchoSkillBot31", "prototypes\SimpleBotToBot31\EchoSkillBot31\EchoSkillBot31.csproj", "{B27A2C31-1E50-4BAB-B9F9-77FCDB565D1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EchoSkillBot31", "tests\Skills\SimpleBotToBot31\EchoSkillBot31\EchoSkillBot31.csproj", "{B27A2C31-1E50-4BAB-B9F9-77FCDB565D1A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "11. DialogToDialog31", "11. DialogToDialog31", "{9FA36357-8CEF-46EC-BE52-0E7520A40EA3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DialogRootBot31", "prototypes\DialogToDialog31\DialogRootBot31\DialogRootBot31.csproj", "{961D0426-6907-42DF-B000-71E9618C648C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DialogRootBot31", "tests\Skills\DialogToDialog31\DialogRootBot31\DialogRootBot31.csproj", "{961D0426-6907-42DF-B000-71E9618C648C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DialogSkillBot31", "prototypes\DialogToDialog31\DialogSkillBot31\DialogSkillBot31.csproj", "{67809004-BCFC-41B7-B684-F6B4D60207F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DialogSkillBot31", "tests\Skills\DialogToDialog31\DialogSkillBot31\DialogSkillBot31.csproj", "{67809004-BCFC-41B7-B684-F6B4D60207F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -739,6 +739,7 @@ Global
 		{D2D9931A-EBFC-4923-A7BC-EF8BBD76D079} = {6230B915-B238-4E57-AAC4-06B4498F540F}
 		{C8E31CD2-89D4-4659-9557-43EC9C99D984} = {6230B915-B238-4E57-AAC4-06B4498F540F}
 		{24CCB459-B4F6-484F-8BA4-946A4AB816FA} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
+		{4904817E-AF5C-4EEA-A221-40AD45F9EBC8} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
 		{4F93053E-5352-401A-92AD-E538031A4856} = {4904817E-AF5C-4EEA-A221-40AD45F9EBC8}
 		{206AF777-3A80-47D2-B82C-40CDFA0627C6} = {4F93053E-5352-401A-92AD-E538031A4856}
 		{9B469D5B-441B-45A5-93AD-191FB3D7F3DE} = {4904817E-AF5C-4EEA-A221-40AD45F9EBC8}

@@ -3,9 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <UserSecretsId>6310bd04-2272-4a74-82fa-6791f5c7e115</UserSecretsId>
-    <AssemblyName>Microsoft.BotBuilderSamples.SimpleRootBot</AssemblyName>
-    <RootNamespace>Microsoft.BotBuilderSamples.SimpleRootBot</RootNamespace>
+    <UserSecretsId>f94e58a2-e019-4a0c-a6c2-59ecb1115b80</UserSecretsId>
+    <AssemblyName>Microsoft.BotBuilderSamples.EchoSkillBot</AssemblyName>
+    <RootNamespace>Microsoft.BotBuilderSamples.EchoSkillBot</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\libraries\integration\Microsoft.Bot.Builder.Integration.AspNet.Core\Microsoft.Bot.Builder.Integration.AspNet.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\libraries\integration\Microsoft.Bot.Builder.Integration.AspNet.Core\Microsoft.Bot.Builder.Integration.AspNet.Core.csproj" />
   </ItemGroup>
 
     <ItemGroup>
