@@ -91,7 +91,14 @@ namespace Microsoft.BotBuilderSamples
                         Intent = "Greeting",
                         Actions = new List<Dialog>()
                         {
-                            new SendActivity("I'm greeting you. LUIS recognizer won!")
+                            new SendActivity("I'm greeting you. LUIS recognizer won!"),
+                            new HttpRequest()
+                            {
+                                Body = "",
+                                Url = "",
+                                Headers = new Dictionary<string, string>(){
+                                }
+                            }
                         }
                     },
                     new OnIntent()

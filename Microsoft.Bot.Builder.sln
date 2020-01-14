@@ -168,6 +168,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.TestP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Bot.Builder.Dialogs.Adaptive.Profiling", "tests\Microsoft.Bot.Builder.Dialogs.Adaptive.Profiling\Microsoft.Bot.Builder.Dialogs.Adaptive.Profiling.csproj", "{D9242899-AB3F-46BB-BAB4-386CB8EC535C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBed", "samples\TestBed\TestBed.csproj", "{0A82F872-F522-40A7-83A2-AB25C335A821}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -680,6 +682,14 @@ Global
 		{D9242899-AB3F-46BB-BAB4-386CB8EC535C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D9242899-AB3F-46BB-BAB4-386CB8EC535C}.Release-Windows|Any CPU.ActiveCfg = Release|Any CPU
 		{D9242899-AB3F-46BB-BAB4-386CB8EC535C}.Release-Windows|Any CPU.Build.0 = Release|Any CPU
+		{0A82F872-F522-40A7-83A2-AB25C335A821}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A82F872-F522-40A7-83A2-AB25C335A821}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A82F872-F522-40A7-83A2-AB25C335A821}.Debug-Windows|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A82F872-F522-40A7-83A2-AB25C335A821}.Debug-Windows|Any CPU.Build.0 = Debug|Any CPU
+		{0A82F872-F522-40A7-83A2-AB25C335A821}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A82F872-F522-40A7-83A2-AB25C335A821}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A82F872-F522-40A7-83A2-AB25C335A821}.Release-Windows|Any CPU.ActiveCfg = Release|Any CPU
+		{0A82F872-F522-40A7-83A2-AB25C335A821}.Release-Windows|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
