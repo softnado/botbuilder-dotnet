@@ -18,16 +18,16 @@ namespace Microsoft.BotBuilderSamples
 {
     public class RootDialog : ComponentDialog
     {
-        private TemplateEngine _templateEngine;
+        private LGFile _lgFile;
 
         public RootDialog()
             : base(nameof(RootDialog))
         {
-            var lgFile = Path.Combine(".", "Dialogs", "RootDialog", "RootDialog.lg");
-            _templateEngine = new TemplateEngine().AddFile(lgFile);
+            var lgFilePath = Path.Combine(".", "Dialogs", "RootDialog", "RootDialog.lg");
+            _lgFile = LGParser.ParseFile(lgFilePath);
             var rootDialog = new AdaptiveDialog(nameof(AdaptiveDialog))
             {
-                Generator = new TemplateEngineLanguageGenerator(_templateEngine),
+                Generator = new TemplateEngineLanguageGenerator(_lgFile),
                 Recognizer = MultiRecognizer(),
                 Triggers = new List<OnCondition>()
                 {
