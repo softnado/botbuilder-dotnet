@@ -101,14 +101,36 @@ namespace Microsoft.BotBuilderSamples
                             new HttpRequest()
                             {
                                 Body = new JObject(
-                                            new JProperty("testproperty", "testvalue"),
-                                            new JProperty(
-                                                "testobject",
+                                        new JProperty(
+                                            "Name",
+                                            "@{dialog.endpoint}"),
+                                        new JProperty(
+                                                "Properties",
                                                 new JObject(
                                                     new JProperty(
-                                                        "child1", 
+                                                        "FavoriteAlbums",
                                                         new JArray(
-                                                            new JValue("@{dialog.endpoint}")))))),
+                                                            new JObject(
+                                                                new JProperty("Name", "@{dialog.endpoint}"),
+                                                                new JProperty("Votes", "1"),
+                                                                new JProperty("Users", null)))),
+                                                    new JProperty(
+                                                        "FavoriteSongs",
+                                                        new JArray(
+                                                            new JObject(
+                                                                new JProperty("Name", "@{dialog.endpoint}"),
+                                                                new JProperty("Votes", "1"),
+                                                                new JProperty("Users", null)))),
+                                                    new JProperty(
+                                                        "Reviews",
+                                                        new JArray(
+                                                            new JValue("@{dialog.appId}"))))),
+                                        new JProperty(
+                                            "Votes", 
+                                            "1"),
+                                        new JProperty(
+                                            "Submitter",
+                                            "@{coalesce(dialog.appId, 'Anonymous')}")),
                                 Url = "@{dialog.endpoint}/luis/api/v2.0/apps/@{dialog.appId}/settings",
                                 Headers = new Dictionary<string, string>()
                                 {
