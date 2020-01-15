@@ -167,7 +167,16 @@ namespace Microsoft.Bot.Builder.Dialogs.Adaptive.Actions
             JToken instanceBody = null;
             if (this.Body != null)
             {
-                instanceBody = (JToken)this.Body.DeepClone();
+                try
+                {
+                    // This is to support body being set to a memory path.
+                    var instanceBodyAsValue = await new TextTemplate(this.Body.ToString()).BindToData(dc.Context, dc.GetState()).ConfigureAwait(false);
+                    instanceBody = JToken.Parse(instanceBodyAsValue);
+                }
+                catch (Exception ex)
+                {
+                    instanceBody = (JToken)this.Body.DeepClone();
+                }
             }
 
             var instanceHeaders = Headers == null ? null : new Dictionary<string, string>(Headers);
@@ -186,9 +195,9 @@ namespace Microsoft.Bot.Builder.Dialogs.Adaptive.Actions
             {
                 foreach (var unit in instanceHeaders)
                 {
-                    client.DefaultRequestHeaders.Add(
-                        await new TextTemplate(unit.Key).BindToData(dc.Context, dc.GetState()),
-                        await new TextTemplate(unit.Value).BindToData(dc.Context, dc.GetState()));
+                    client.DefaultRequestHeaders.TryAddWithoutValidation(
+                        await new TextTemplate(unit.Key).BindToData(dc.Context, dc.GetState()).ConfigureAwait(false),
+                        await new TextTemplate(unit.Value).BindToData(dc.Context, dc.GetState()).ConfigureAwait(false));
                 }
             }
 

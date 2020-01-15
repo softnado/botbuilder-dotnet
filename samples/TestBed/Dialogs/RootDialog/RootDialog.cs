@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.Bot.Builder.AI.Luis;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Adaptive;
@@ -13,6 +14,7 @@ using Microsoft.Bot.Builder.Dialogs.Adaptive.Recognizers;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Templates;
 using Microsoft.Bot.Builder.LanguageGeneration;
 using Microsoft.Bot.Expressions;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.BotBuilderSamples
 {
@@ -92,13 +94,31 @@ namespace Microsoft.BotBuilderSamples
                         Actions = new List<Dialog>()
                         {
                             new SendActivity("I'm greeting you. LUIS recognizer won!"),
+                            new SendActivity("Testing HTTp issue.."),
+                            new CodeAction(GenerateHttpRequestBody),
+                            new SendActivity("Back from code action... @{dialog.httpbody}"),
+                            new SendActivity("URL:@{dialog.endpoint}/luis/api/v2.0/apps/@{dialog.appId}/settings"),
                             new HttpRequest()
                             {
-                                Body = "",
-                                Url = "",
-                                Headers = new Dictionary<string, string>(){
-                                }
-                            }
+                                Body = new JObject(
+                                            new JProperty("testproperty", "testvalue"),
+                                            new JProperty(
+                                                "testobject",
+                                                new JObject(
+                                                    new JProperty(
+                                                        "child1", 
+                                                        new JArray(
+                                                            new JValue("@{dialog.endpoint}")))))),
+                                Url = "@{dialog.endpoint}/luis/api/v2.0/apps/@{dialog.appId}/settings",
+                                Headers = new Dictionary<string, string>()
+                                {
+                                    { "Content-Type", "application/json" },
+                                    { "Ocp-Apim-Subscription-Key", "@{dialog.key}" }
+                                },
+                                ResultProperty = "dialog.httpresult",
+                                Method = HttpRequest.HttpMethod.PUT
+                            },
+                            new SendActivity("Http response = @{dialog.httpresult}")
                         }
                     },
                     new OnIntent()
@@ -205,6 +225,26 @@ namespace Microsoft.BotBuilderSamples
                     GetLUISApp()
                 }
             };
+        }
+
+        private async Task<DialogTurnResult> GenerateHttpRequestBody(DialogContext dc, object options)
+        {
+            string artist = dc.GetState().GetValue<string>("dialog.artistName");
+            string endpoint = "https://westus.api.cognitive.microsoft.com";
+            string key = "a95d07785b374f0a9d7d40700e28a285";
+            string appId = "fd0eefa3-4acd-4d1e-a18f-dae6a486d418";
+            JObject body = new JObject(
+                new JProperty("testproperty", "testvalue"),
+                new JProperty(
+                    "testobject",
+                    new JObject(
+                        new JProperty("child1", "value1"))));
+            dc.GetState().SetValue("dialog.httpbody", body);
+            dc.GetState().SetValue("dialog.endpoint", endpoint);
+            dc.GetState().SetValue("dialog.appId", appId);
+            dc.GetState().SetValue("dialog.key", key);
+            var obj = dc.GetState().GetValue<object>("dialog.httpbody");
+            return await dc.EndDialogAsync();
         }
     }
 }
