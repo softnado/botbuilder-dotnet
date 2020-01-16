@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -31,19 +32,18 @@ namespace Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions
         // constraints from Rule.AddConstraint()
         private List<Expression> extraConstraints = new List<Expression>();
 
-        private string priorityString = null;
-
         // cached expression representing all constraints (constraint AND extraConstraints AND childrenConstraints)
         private Expression fullConstraint = null;
-
-        // cached expression of parsed priority
-        private Expression priorityExpression = null;
 
         [JsonConstructor]
         public OnCondition(string condition = null, List<Dialog> actions = null, [CallerFilePath] string callerPath = "", [CallerLineNumber] int callerLine = 0)
         {
             this.RegisterSourceLocation(callerPath, callerLine);
-            this.Condition = condition;
+            if (condition != null)
+            {
+                this.Condition = condition;
+            }
+
             this.Actions = actions;
         }
 
@@ -54,7 +54,7 @@ namespace Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions
         /// The condition which needs to be met for the actions to be executed.
         /// </value>
         [JsonProperty("condition")]
-        public string Condition { get; set; }
+        public BoolExpression Condition { get; set; }
 
         /// <summary>
         /// Gets or sets the actions to add to the plan when the rule constraints are met.
@@ -73,15 +73,7 @@ namespace Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions
         /// </summary>
         /// <value>Priority of condition expression.</value>
         [JsonProperty("priority")]
-        public string Priority
-        {
-            get => priorityString;
-            set
-            {
-                priorityExpression = null;
-                priorityString = value;
-            }
-        }
+        public IntExpression Priority { get; set; } = new IntExpression();
 
         /// <summary>
         /// Gets or sets a value indicating whether rule should only run once per unique set of memory paths.
@@ -122,16 +114,10 @@ namespace Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions
                 if (this.fullConstraint == null)
                 {
                     var allExpressions = new List<Expression>();
-                    if (!string.IsNullOrWhiteSpace(this.Condition))
+                    
+                    if (this.Condition != null)
                     {
-                        try
-                        {
-                            allExpressions.Add(parser.Parse(this.Condition));
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception($"Invalid constraint expression: {this.Condition}, {e.Message}");
-                        }
+                        allExpressions.Add(this.Condition.ToExpression());
                     }
 
                     if (this.extraConstraints.Any())
@@ -169,11 +155,6 @@ namespace Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions
                                     BuiltInFunctions.ValidateUnary))));
                     }
                 }
-
-                if (priorityExpression == null)
-                {
-                    priorityExpression = parser.Parse(Priority);
-                }
             }
 
             return this.fullConstraint;
@@ -186,13 +167,13 @@ namespace Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions
         /// <returns>Computed priority.</returns>
         public int CurrentPriority(SequenceContext context)
         {
-            var (priority, error) = priorityExpression.TryEvaluate(context.GetState());
-            if (error != null || !(priority is int))
+            var (priority, error) = this.Priority.TryGetValue(context.GetState());
+            if (error != null)
             {
                 priority = -1;
             }
 
-            return (int)priority;
+            return priority;
         }
 
         /// <summary>
@@ -207,7 +188,7 @@ namespace Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions
                 {
                     lock (this.extraConstraints)
                     {
-                        this.extraConstraints.Add(new ExpressionEngine().Parse(condition));
+                        this.extraConstraints.Add(new ExpressionEngine().Parse(condition.TrimStart('=')));
                         this.fullConstraint = null; // reset to force it to be recalcaulated
                     }
                 }
@@ -227,8 +208,9 @@ namespace Microsoft.Bot.Builder.Dialogs.Adaptive.Conditions
         {
             if (RunOnce)
             {
-                var count = planningContext.GetState().GetValue<uint>(DialogPath.EventCounter);
-                planningContext.GetState().SetValue($"{AdaptiveDialog.ConditionTracker}.{Id}.lastRun", count);
+                var dcState = planningContext.GetState();
+                var count = dcState.GetValue<uint>(DialogPath.EventCounter);
+                dcState.SetValue($"{AdaptiveDialog.ConditionTracker}.{Id}.lastRun", count);
             }
 
             return await Task.FromResult(new List<ActionChangeList>()
