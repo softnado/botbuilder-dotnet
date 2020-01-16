@@ -30,8 +30,7 @@ namespace Microsoft.BotBuilderSamples
             {
                 // Log any leaked exception from the application.
                 logger.LogError($"Exception caught : {exception.Message}");
-                var result = _lgFile.EvaluateTemplate("SomethingWentWrong", null);
-                await turnContext.SendActivityAsync(MessageFactory.Text(_lgFile.EvaluateTemplate("SomethingWentWrong").ToString()));
+                await turnContext.SendActivityAsync(ActivityFactory.CreateActivity(_lgFile.EvaluateTemplate("SomethingWentWrong")));
 
                 if (conversationState != null)
                 {

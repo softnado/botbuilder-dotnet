@@ -25,8 +25,7 @@ namespace Microsoft.BotBuilderSamples
         public RootDialog()
             : base(nameof(RootDialog))
         {
-            var lgFilePath = Path.Combine(".", "Dialogs", "RootDialog", "RootDialog.lg");
-            _lgFile = LGParser.ParseFile(lgFilePath);
+            _lgFile = LGParser.ParseFile(Path.Combine(".", "Dialogs", "RootDialog", "RootDialog.lg"));
             var rootDialog = new AdaptiveDialog(nameof(AdaptiveDialog))
             {
                 Generator = new TemplateEngineLanguageGenerator(_lgFile),
