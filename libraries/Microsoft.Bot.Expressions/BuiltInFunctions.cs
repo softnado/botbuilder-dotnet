@@ -669,7 +669,7 @@ namespace Microsoft.Bot.Expressions
             => new ExpressionEvaluator(type, Apply(function, VerifyStringOrNull), ReturnType.String, ValidateUnaryString);
 
         /// <summary>
-        /// Transform a datetime to another datetime.
+        /// Transform a date-time to another date-time.
         /// </summary>
         /// <param name="type">Expression type.</param>
         /// <param name="function">Transformer.</param>
@@ -1435,12 +1435,8 @@ namespace Microsoft.Bot.Expressions
 
                         // the local iterator is pushed as one memory layer in the memory stack
                         stackedMemory.Push(SimpleObjectMemory.Wrap(local));
-                        var (r, err) = expression.Children[2].TryEvaluate<bool>(stackedMemory);
+                        var (r, _) = expression.Children[2].TryEvaluate<bool>(stackedMemory);
                         stackedMemory.Pop();
-
-                        if (err != null)
-                        {
-                        }
 
                         if (r)
                         {
@@ -1654,7 +1650,7 @@ namespace Microsoft.Bot.Expressions
             }
             catch
             {
-                error = $"illegal timestamp representation {sourceTimestamp}";
+                error = $"illegal time-stamp representation {sourceTimestamp}";
             }
 
             if (error == null)

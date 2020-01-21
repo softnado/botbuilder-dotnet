@@ -12,7 +12,6 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="appsettings.json" />
-    <None Remove="xunit.runner.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,5 +51,9 @@
     </None>
     <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
-
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

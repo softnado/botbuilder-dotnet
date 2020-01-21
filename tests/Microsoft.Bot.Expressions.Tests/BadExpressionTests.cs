@@ -307,9 +307,6 @@ namespace Microsoft.Bot.Expressions.Tests
             Test("where(items, item, item2, item3)"), // should have three parameters
             Test("where(items, add(1), item)"), // Second paramter of where is not an identifier
             Test("where(items, 1, item)"), // Second paramter error
-#if false
-            Test("where(items, x, sum(x))"), // third paramter error
-#endif
             Test("indicesAndValues(items, 1)"), // only one param
             Test("indicesAndValues(1)"), // shoud have array param
             Test("union(one, two)"), // should have collection param
@@ -470,7 +467,7 @@ namespace Microsoft.Bot.Expressions.Tests
             try
             {
                 var (value, error) = new ExpressionEngine().Parse(exp).TryEvaluate(scope);
-                if (error == null)
+                if (error != null)
                 {
                     isFail = true;
                 }
@@ -481,10 +478,11 @@ namespace Microsoft.Bot.Expressions.Tests
             }
             catch (Exception e)
             {
+                isFail = true;
                 TestContext.WriteLine(e.Message);
             }
 
-            if (isFail)
+            if (isFail == false)
             {
                 Assert.Fail("Test method did not throw expected exception");
             }

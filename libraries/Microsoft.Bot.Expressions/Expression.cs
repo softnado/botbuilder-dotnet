@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 namespace Microsoft.Bot.Expressions
 {
     /// <summary>
-    /// Type expected from evalating an expression.
+    /// Type expected from evaluating an expression.
     /// </summary>
     public enum ReturnType
     {
@@ -129,7 +129,7 @@ namespace Microsoft.Bot.Expressions
             => new Expression(new ExpressionEvaluator(ExpressionType.Lambda, function));
 
         /// <summary>
-        /// Construct an expression from a lamba expression over the state.
+        /// Construct an expression from a lambda expression over the state.
         /// </summary>
         /// <remarks>Exceptions will be caught and surfaced as an error string.</remarks>
         /// <param name="function">Lambda expression to evaluate.</param>
@@ -275,7 +275,6 @@ namespace Microsoft.Bot.Expressions
         /// <summary>
         /// Evaluate the expression.
         /// </summary>
-        /// <typeparam name="T">type of result of the expression.</typeparam>
         /// <param name="state">
         /// Global state to evaluate accessor expressions against.  Can be <see cref="System.Collections.Generic.IDictionary{String, Object}"/>,
         /// <see cref="System.Collections.IDictionary"/> otherwise reflection is used to access property and then indexer.
