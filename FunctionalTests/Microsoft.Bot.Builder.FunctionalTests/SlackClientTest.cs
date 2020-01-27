@@ -22,22 +22,46 @@ namespace Microsoft.Bot.Builder.FunctionalTests
         private string _slackBotToken;
 
         [TestMethod]
-        public async Task SendAndReceiveSlackMessageShouldSucceed()
+        public async Task SendAndReceiveSlackMessageShouldSucceed1()
         {
             GetEnvironmentVars();
 
-            // Ignore the response to the first bot message. Bot may not be "ready" yet.
             var echoGuid = Guid.NewGuid().ToString();
             await SendMessageAsync(echoGuid);
 
-            var response = await ReceiveMessageAsync();
+            var response1 = await ReceiveMessageAsync();
 
-            Assert.AreEqual($"Echo: {echoGuid}", response);
+            Assert.AreEqual($"Echo: {echoGuid}", response1);
+        }
+
+        [TestMethod]
+        public async Task SendAndReceiveSlackMessageShouldSucceed2()
+        {
+            GetEnvironmentVars();
+
+            var echoGuid = Guid.NewGuid().ToString();
+            await SendMessageAsync(echoGuid);
+
+            var response1 = await ReceiveMessageAsync();
+
+            Assert.AreEqual($"Echo: {echoGuid}", response1);
+        }
+
+        [TestMethod]
+        public async Task SendAndReceiveSlackMessageShouldSucceed3()
+        {
+            GetEnvironmentVars();
+
+            // Ignore the first bot response to the message.
+            var echoGuid = Guid.NewGuid().ToString();
+            await SendMessageAsync(echoGuid);
+
+            var response1 = await ReceiveMessageAsync();
 
             // Check for another response
-            response = await ReceiveMessageAsync();
+            var response2 = await ReceiveMessageAsync();
 
-            Assert.AreEqual($"Echo: {echoGuid}", response);
+            Assert.AreEqual($"Echo: {echoGuid}", response2);
         }
 
         private async Task<string> ReceiveMessageAsync()
