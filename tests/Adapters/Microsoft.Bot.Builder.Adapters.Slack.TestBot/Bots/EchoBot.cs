@@ -28,8 +28,13 @@ namespace Microsoft.Bot.Builder.Adapters.Slack.TestBot.Bots
         {
             string text =
                     $"From: {turnContext.Activity.From.Name} " +
+                    $"FromId: {turnContext.Activity.From.Id} " +
                     $"Recipient: {turnContext.Activity.Recipient.Name} " +
+                    $"RecipientId: {turnContext.Activity.Recipient.Id} " +
                     $"Echo: {turnContext.Activity.Text}";
+
+            turnContext.Activity.From.Name = "TestBot12";
+
             await turnContext.SendActivityAsync(MessageFactory.Text(text), cancellationToken);
 
             // Ensure bot does not respond to itself in Slack.
