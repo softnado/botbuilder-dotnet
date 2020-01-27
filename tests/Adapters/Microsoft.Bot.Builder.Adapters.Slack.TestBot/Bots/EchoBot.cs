@@ -26,31 +26,11 @@ namespace Microsoft.Bot.Builder.Adapters.Slack.TestBot.Bots
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
-            string text =
-                    $"From: {turnContext.Activity.From.Name} " +
-                    $"FromId: {turnContext.Activity.From.Id} " +
-                    $"Recipient: {turnContext.Activity.Recipient.Name} " +
-                    $"RecipientId: {turnContext.Activity.Recipient.Id} " +
-                    $"Echo: {turnContext.Activity.Text}";
-
-            //turnContext.Activity.From.Name = "TestBot12";
-
-            // No From.Id indicates message is from user, not the bot itself. Therefore, reply.
+            // Respond to user messages, filter out bot messages. Bot messages have a non-blank From.Id.
             if (string.IsNullOrWhiteSpace(turnContext.Activity.From.Id))
             {
-                await turnContext.SendActivityAsync(MessageFactory.Text(text), cancellationToken);
+                await turnContext.SendActivityAsync(MessageFactory.Text($"Echo: {turnContext.Activity.Text}"), cancellationToken);
             }
-
-            // Ensure bot does not respond to itself in Slack.
-            //if (turnContext.Activity.From.Name != "Bot")
-            //{
-            //await turnContext.SendActivityAsync(
-            //    MessageFactory.Text(
-            //        $"From: {turnContext.Activity.From.Name} " +
-            //        $"Recipient: {turnContext.Activity.Recipient.Name} " +
-            //        $"Echo: {turnContext.Activity.Text}"), cancellationToken);
-
-            //}
         }
 
         /// <summary>
