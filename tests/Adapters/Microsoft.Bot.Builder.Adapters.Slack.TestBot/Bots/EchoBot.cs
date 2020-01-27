@@ -29,7 +29,11 @@ namespace Microsoft.Bot.Builder.Adapters.Slack.TestBot.Bots
             // Respond to user messages, filter out bot messages. Bot messages have a non-blank From.Id.
             if (string.IsNullOrWhiteSpace(turnContext.Activity.From.Id))
             {
-                await turnContext.SendActivityAsync(MessageFactory.Text($"Echo: {turnContext.Activity.Text}"), cancellationToken);
+                //await turnContext.SendActivityAsync(MessageFactory.Text($"Echo: {turnContext.Activity.Text}"), cancellationToken);
+
+                string text = $"Echo: {turnContext.Activity.Text}";
+                IMessageActivity replyActivity = MessageFactory.Text(text, text);
+                await turnContext.SendActivityAsync(replyActivity, cancellationToken);
             }
         }
 
