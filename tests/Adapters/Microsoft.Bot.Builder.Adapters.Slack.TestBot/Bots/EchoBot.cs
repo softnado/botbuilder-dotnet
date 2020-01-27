@@ -27,10 +27,14 @@ namespace Microsoft.Bot.Builder.Adapters.Slack.TestBot.Bots
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
             // Ensure bot does not respond to itself in Slack.
-            if (turnContext.Activity.From.Name != "Bot")
-            {
-                await turnContext.SendActivityAsync(MessageFactory.Text($"Echo: {turnContext.Activity.Text}"), cancellationToken);
-            }
+            //if (turnContext.Activity.From.Name != "Bot")
+            //{
+                await turnContext.SendActivityAsync(
+                    MessageFactory.Text($"From: {turnContext.Activity.From.Name} " +
+                    $"Recipient: {turnContext.Activity.Recipient.Name} " +
+                    $"Echo: {turnContext.Activity.Text}"), cancellationToken);
+            
+            //}
         }
 
         /// <summary>
