@@ -33,9 +33,13 @@ namespace Microsoft.Bot.Builder.Adapters.Slack.TestBot.Bots
                     $"RecipientId: {turnContext.Activity.Recipient.Id} " +
                     $"Echo: {turnContext.Activity.Text}";
 
-            turnContext.Activity.From.Name = "TestBot12";
+            //turnContext.Activity.From.Name = "TestBot12";
 
-            await turnContext.SendActivityAsync(MessageFactory.Text(text), cancellationToken);
+            // No From.Id indicates message is from user, not the bot itself. Therefore, reply.
+            if (string.IsNullOrWhiteSpace(turnContext.Activity.From.Id))
+            {
+                await turnContext.SendActivityAsync(MessageFactory.Text(text), cancellationToken);
+            }
 
             // Ensure bot does not respond to itself in Slack.
             //if (turnContext.Activity.From.Name != "Bot")
