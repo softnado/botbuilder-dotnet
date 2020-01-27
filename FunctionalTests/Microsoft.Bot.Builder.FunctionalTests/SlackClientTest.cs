@@ -32,10 +32,9 @@ namespace Microsoft.Bot.Builder.FunctionalTests
 
             var response = await ReceiveMessageAsync();
 
-            // Message the bot a 2nd time for the test.
-            echoGuid = Guid.NewGuid().ToString();
-            await SendMessageAsync(echoGuid);
+            Assert.AreEqual($"Echo: {echoGuid}", response);
 
+            // Check for another response
             response = await ReceiveMessageAsync();
 
             Assert.AreEqual($"Echo: {echoGuid}", response);
