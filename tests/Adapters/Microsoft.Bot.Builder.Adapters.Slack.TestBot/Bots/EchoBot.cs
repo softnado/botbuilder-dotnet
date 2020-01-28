@@ -18,6 +18,8 @@ namespace Microsoft.Bot.Builder.Adapters.Slack.TestBot.Bots
     /// </summary>
     public class EchoBot : ActivityHandler
     {
+        private static string _lastResponse = string.Empty;
+
         /// <summary>
         /// OnMessageActivityAsync method that returns an async Task.
         /// </summary>
@@ -27,14 +29,20 @@ namespace Microsoft.Bot.Builder.Adapters.Slack.TestBot.Bots
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
             // Respond to user messages, filter out bot messages. Bot messages have a non-blank From.Id.
-            if (string.IsNullOrWhiteSpace(turnContext.Activity.From.Id))
+            if (turnContext.Activity.Text != _lastResponse)
             {
-                //await turnContext.SendActivityAsync(MessageFactory.Text($"Echo: {turnContext.Activity.Text}"), cancellationToken);
+                _lastResponse = $"Echo: {turnContext.Activity.Text}";
+                await turnContext.SendActivityAsync(MessageFactory.Text(_lastResponse), cancellationToken);
 
-                string text = $"Echo: {turnContext.Activity.Text}";
-                IMessageActivity replyActivity = MessageFactory.Text(text, text);
-                await turnContext.SendActivityAsync(replyActivity, cancellationToken);
+                //string text = $"Echo: {turnContext.Activity.Text}";
+                //IMessageActivity replyActivity = MessageFactory.Text(text, text);
+                //await turnContext.SendActivityAsync(replyActivity, cancellationToken);
             }
+
+            //else
+            //{
+            //    await turnContext.SendActivityAsync(MessageFactory.Text($"Id: {turnContext.Activity.From.Id} Echo: {turnContext.Activity.Text}"), cancellationToken);
+            //}
         }
 
         /// <summary>
