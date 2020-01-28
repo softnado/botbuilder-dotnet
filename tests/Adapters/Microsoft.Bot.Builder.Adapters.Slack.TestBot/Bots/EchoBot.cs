@@ -28,21 +28,12 @@ namespace Microsoft.Bot.Builder.Adapters.Slack.TestBot.Bots
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
-            // Respond to user messages, filter out bot messages. Bot messages have a non-blank From.Id.
+            // Reply to any user message, not to the last bot message (which Slack echoes).
             if (turnContext.Activity.Text != _lastResponse)
             {
                 _lastResponse = $"Echo: {turnContext.Activity.Text}";
                 await turnContext.SendActivityAsync(MessageFactory.Text(_lastResponse), cancellationToken);
-
-                //string text = $"Echo: {turnContext.Activity.Text}";
-                //IMessageActivity replyActivity = MessageFactory.Text(text, text);
-                //await turnContext.SendActivityAsync(replyActivity, cancellationToken);
             }
-
-            //else
-            //{
-            //    await turnContext.SendActivityAsync(MessageFactory.Text($"Id: {turnContext.Activity.From.Id} Echo: {turnContext.Activity.Text}"), cancellationToken);
-            //}
         }
 
         /// <summary>
