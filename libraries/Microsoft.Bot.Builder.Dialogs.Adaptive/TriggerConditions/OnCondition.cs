@@ -12,6 +12,7 @@ using Microsoft.Bot.Builder.Dialogs.Adaptive.Actions;
 using Microsoft.Bot.Builder.Dialogs.Debugging;
 using Microsoft.Bot.Builder.Dialogs.Memory;
 using Microsoft.Bot.Expressions;
+using Microsoft.Bot.Expressions.Properties;
 using Microsoft.Bot.Expressions.TriggerTrees;
 using Newtonsoft.Json;
 
