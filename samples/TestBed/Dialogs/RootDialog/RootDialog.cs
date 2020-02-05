@@ -162,16 +162,12 @@ namespace Microsoft.BotBuilderSamples
 
         private static Recognizer GetLUISApp()
         {
-            var luisapplication = new LuisApplication()
+            return new LuisAdaptiveRecognizer()
             {
+                Id = "Root_LUIS",
                 ApplicationId = "063e7f98-fef5-4b60-a740-39a6d933dd09",
                 EndpointKey = "a95d07785b374f0a9d7d40700e28a285",
                 Endpoint = "https://westus.api.cognitive.microsoft.com"
-            };
-            var luisrecognizeroptions = new LuisRecognizerOptionsV2(luisapplication);
-            return new LuisRecognizer(luisrecognizeroptions)
-            {
-                Id = "Root_LUIS"
             };
         }
 
@@ -192,6 +188,7 @@ namespace Microsoft.BotBuilderSamples
                             Condition = "dialog.foreach.value.name != turn.activity.recipient.name",
                             Actions = new List<Dialog>()
                             {
+                                new SendActivity("I have @{coalesce(settings.key, 'error')}"),
                                 new SendActivity("@{WelcomeUser()}")
                             }
                         }

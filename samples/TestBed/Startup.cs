@@ -7,12 +7,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Connector.Authentication;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.BotBuilderSamples
 {
     public class Startup
     {
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        {
+            this.Configuration = configuration;
+            this.HostingEnvironment = env;
+        }
+
+        private IConfiguration Configuration { get; set; }
+
+        private IHostingEnvironment HostingEnvironment { get; set; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -38,6 +49,9 @@ namespace Microsoft.BotBuilderSamples
 
             // Create the bot. the ASP Controller is expecting an IBot.
             services.AddSingleton<IBot, DialogBot<RootDialog>>();
+
+            // Add this so memory scopes are populated correctly
+            services.AddSingleton<IConfiguration>(this.Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
