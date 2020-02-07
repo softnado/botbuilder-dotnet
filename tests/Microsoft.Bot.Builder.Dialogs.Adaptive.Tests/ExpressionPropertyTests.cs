@@ -6,16 +6,12 @@
 #pragma warning disable SA1602 // Enumeration items should be documented
 #pragma warning disable SA1201 // Elements should appear in the correct order
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Drawing;
-using Microsoft.Bot.Builder.Dialogs.Adaptive.Converters;
+using AdaptiveExpressions.Properties;
+using AdaptiveExpressions.Properties.Converters;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Input;
 using Microsoft.Bot.Builder.Dialogs.Choices;
-using Microsoft.Bot.Expressions.Properties;
-using Microsoft.Bot.Expressions.Properties.Converters;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;

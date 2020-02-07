@@ -3,11 +3,11 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AdaptiveExpressions.Properties;
+using AdaptiveExpressions.Properties.Converters;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Luis;
 using Microsoft.Bot.Builder.Dialogs.Adaptive.Recognizers;
 using Microsoft.Bot.Builder.MockLuis;
-using Microsoft.Bot.Expressions.Properties;
-using Microsoft.Bot.Expressions.Properties.Converters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;

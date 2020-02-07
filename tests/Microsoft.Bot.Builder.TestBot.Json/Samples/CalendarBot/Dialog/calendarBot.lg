@@ -78,3 +78,43 @@
 }
 ]
 ```
+
+# cardResponse
+[Activity
+    Attachments=@{json(formCard1())}
+]
+
+ 
+
+ 
+
+ 
+
+# formCard1
+-```
+{
+    "type": "AdaptiveCard",
+    "version": "1.0",
+    "body": [
+        {
+            "type": "TextBlock",
+            "text": "FormData",
+            "size": "large"
+        },
+        {
+            "type": "FactSet",
+            "facts": [@{generateJson(content)}]
+        }
+    ],
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
+}
+```
+
+ 
+
+ 
+
+ 
+
+# generateJson(content)
+- @{join(foreach(content, i, addProperty(addProperty(json('{}'), 'title', i.key), 'value', i.value)), ',')}
